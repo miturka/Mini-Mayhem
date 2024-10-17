@@ -3,36 +3,32 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    public float jumpForce = 5.0f;
+    public Rigidbody rb;
 
-    // Direction vectors for isometric movement
-    private Vector3 moveUpRight = new Vector3(1, 0, 1).normalized;
-    private Vector3 moveUpLeft = new Vector3(-1, 0, 1).normalized;
-    private Vector3 moveDownRight = new Vector3(1, 0, -1).normalized;
-    private Vector3 moveDownLeft = new Vector3(-1, 0, -1).normalized;
+    private Vector3 movementDirection;
 
     void Update()
     {
-        Vector3 movement = Vector3.zero;
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
-        // WASD input handling for isometric movement
-        if (Input.GetKey(KeyCode.W))
+        // Convert input to isometric directions
+        Vector3 direction = new Vector3(horizontal, 0, vertical);
+        Vector3 isometricDirection = Quaternion.Euler(0, 45, 0) * direction;
+
+        if (isometricDirection.magnitude > 0)
         {
-            movement += moveUpRight;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            movement += moveDownLeft;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            movement += moveUpLeft;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            movement += moveDownRight;
+            // Rotate player to face the movement direction
+            transform.rotation = Quaternion.LookRotation(isometricDirection);
         }
 
-        // Move the player in the calculated direction
-        transform.Translate(movement * moveSpeed * Time.deltaTime);
+        if (Input.GetButtonDown("Jump"))
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+
+        // Move the player
+        transform.Translate(isometricDirection * moveSpeed * Time.deltaTime, Space.World);
     }
 }
