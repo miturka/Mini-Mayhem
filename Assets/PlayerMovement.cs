@@ -1,34 +1,92 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    public float jumpForce = 5.0f;
     public Rigidbody rb;
+    private Vector3 movement;
 
-    private Vector3 movementDirection;
+    public float jumpForce = 5f; 
+    public float gravityMultiplier = 2f; 
+    private bool isGrounded = true;
+
+    public float dodgeSpeed = 1f; 
+    public float dodgeDuration = 0.1f;
+    public float dodgeCooldown = 1f; 
+    private bool isDodging = false;
+    private float lastDodgeTime = -1f;
 
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.z = Input.GetAxisRaw("Vertical");
+        movement = movement.normalized;
 
-        // Convert input to isometric directions
-        Vector3 direction = new Vector3(horizontal, 0, vertical);
-        Vector3 isometricDirection = Quaternion.Euler(0, 45, 0) * direction;
-
-        if (isometricDirection.magnitude > 0)
+        // Smooth rotation
+        if (movement != Vector3.zero)
         {
-            // Rotate player to face the movement direction
-            transform.rotation = Quaternion.LookRotation(isometricDirection);
+            Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720 * Time.deltaTime); 
         }
 
-        if (Input.GetButtonDown("Jump"))
+        // Jump
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            Jump();
         }
 
-        // Move the player
-        transform.Translate(isometricDirection * moveSpeed * Time.deltaTime, Space.World);
+        // Dodge
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time >= lastDodgeTime + dodgeCooldown && !isDodging)
+        {
+            StartCoroutine(Dodge());
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // Normal movement only if not dodging
+        if (!isDodging) 
+        {
+            rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        }
+
+        // Apply extra gravity to bring the player down faster while jumping
+        if (!isGrounded)
+        {
+            rb.AddForce(Vector3.down * gravityMultiplier, ForceMode.Acceleration);
+        }
+    }
+
+    void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        isGrounded = false; 
+    }
+
+    IEnumerator Dodge()
+    {
+        isDodging = true; 
+        lastDodgeTime = Time.time; 
+
+        Vector3 dodgeDirection = transform.forward;
+
+        float dodgeEndTime = Time.time + dodgeDuration;
+        while (Time.time < dodgeEndTime)
+        {
+            rb.MovePosition(rb.position + dodgeDirection * dodgeSpeed * Time.fixedDeltaTime);
+            yield return null; // Wait for the next frame
+        }
+
+        isDodging = false;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true; 
+        }
     }
 }

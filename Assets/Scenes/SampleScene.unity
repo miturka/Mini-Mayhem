@@ -303,8 +303,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpForce: 5
   rb: {fileID: 595281903}
+  jumpForce: 5
+  gravityMultiplier: 2
+  dodgeSpeed: 10
+  dodgeDuration: 0.3
+  dodgeCooldown: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,9 +415,9 @@ GameObject:
   - component: {fileID: 736765947}
   - component: {fileID: 736765946}
   - component: {fileID: 736765945}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -612,8 +616,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpForce: 5
   rb: {fileID: 913367604}
+  jumpForce: 5
+  gravityMultiplier: 5
+  dodgeSpeed: 1
+  dodgeDuration: 0.1
+  dodgeCooldown: 1
 --- !u!54 &913367604
 Rigidbody:
   m_ObjectHideFlags: 0
