@@ -18,11 +18,14 @@ public class PlayerMovement : MonoBehaviour
     private bool isDodging = false;
     private float lastDodgeTime = -1f;
 
+    private Vector3 isometricForward = new Vector3(1, 0, 1).normalized; 
+    private Vector3 isometricRight = new Vector3(1, 0, -1).normalized;
+
     void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.z = Input.GetAxisRaw("Vertical");
-        movement = movement.normalized;
+        Vector3 forwardMovement = Input.GetAxisRaw("Vertical") * isometricForward;
+        Vector3 rightMovement = Input.GetAxisRaw("Horizontal") * isometricRight;
+        movement = (forwardMovement + rightMovement).normalized;
 
         // Smooth rotation
         if (movement != Vector3.zero)
