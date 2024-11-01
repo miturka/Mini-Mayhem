@@ -9,7 +9,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 movement;
 
     public float jumpForce = 5f; 
-    public float gravityMultiplier = 2f; 
+    public float gravityMultiplier = 2f;
+
+    [SerializeField]
     private bool isGrounded = true;
 
     public float dodgeSpeed = 1f; 
@@ -21,11 +23,16 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 isometricForward = new Vector3(1, 0, 1).normalized; 
     private Vector3 isometricRight = new Vector3(1, 0, -1).normalized;
 
+    public float groundCheckDistance = 0.2f;
+    public LayerMask groundLayer;
+
     void Update()
     {
         Vector3 forwardMovement = Input.GetAxisRaw("Vertical") * isometricForward;
         Vector3 rightMovement = Input.GetAxisRaw("Horizontal") * isometricRight;
         movement = (forwardMovement + rightMovement).normalized;
+
+        isGrounded = IsGrounded();
 
         // Smooth rotation
         if (movement != Vector3.zero)
@@ -85,11 +92,19 @@ public class PlayerMovement : MonoBehaviour
         isDodging = false;
     }
 
-    void OnCollisionEnter(Collision collision)
+    bool IsGrounded()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true; 
-        }
+        // Start the raycast from just below the player's transform position
+        Vector3 rayOrigin = transform.position + Vector3.down * 0.1f;
+
+        // Draw a ray in the Scene view to visually confirm its direction and distance
+        Debug.DrawRay(rayOrigin, Vector3.down * groundCheckDistance, Color.red);
+
+        // Perform the Raycast and check if it hits the ground
+        bool grounded = Physics.Raycast(rayOrigin, Vector3.down, groundCheckDistance, groundLayer);
+        Debug.Log("IsGrounded Raycast Hit: " + grounded);
+        return grounded;
     }
+
+
 }
