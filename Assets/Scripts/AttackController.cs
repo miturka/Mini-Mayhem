@@ -5,7 +5,7 @@ public class AttackController : MonoBehaviour
     public Collider hitbox;                  // Reference to the hitbox collider
     public int attackDamage = 10;            // Damage dealt per attack
     public float attackDuration = 0.2f;
-    public float spinDuration = 0.5f; // How long the hitbox stays active
+    public float spinDuration = 0.5f;       // How long the hitbox stays active
     public KeyCode attackKey = KeyCode.U;    // Configurable attack key (default is "U")
 
     private bool isAttacking = false;
@@ -63,7 +63,7 @@ public class AttackController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // This should only trigger if the hitbox is enabled during an attack
-        Debug.Log("Hit detected with: " + other.name); // Check what object it hit
+        Debug.Log("Hit detected with: " + other.name); 
 
         if (other.CompareTag("Player") && other.gameObject != gameObject)
         {
