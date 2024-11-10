@@ -7,7 +7,7 @@ public class HealthManager : MonoBehaviour
     private int currentHealth;
     public Image healthBar;
 
-    void Start()
+    public void InitializeHealth()
     {
         currentHealth = maxHealth;
         UpdateHealthBar();
@@ -17,7 +17,6 @@ public class HealthManager : MonoBehaviour
     {
         currentHealth -= damageAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        Debug.Log(gameObject.name + " took " + damageAmount + " damage. Current Health: " + currentHealth);
         UpdateHealthBar();
 
         if (currentHealth <= 0)
@@ -28,9 +27,7 @@ public class HealthManager : MonoBehaviour
 
     private void Die()
     {
-        // Handle player defeat (e.g., disable player, display KO message)
-        Debug.Log(gameObject.name + " has been knocked out!");
-        // Optionally, disable movement or trigger a knockout animation
+        Debug.Log(gameObject.name + " has been defeated.");
         gameObject.SetActive(false); // Disables the player
     }
 

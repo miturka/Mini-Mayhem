@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovementNew : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpHeight = 2f;
@@ -26,6 +26,8 @@ public class PlayerMovementNew : MonoBehaviour
     public KeyCode downKey = KeyCode.S;
     public KeyCode leftKey = KeyCode.A;
     public KeyCode rightKey = KeyCode.D;
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode dodgeKey = KeyCode.LeftShift;
 
     void Start()
     {
@@ -34,7 +36,6 @@ public class PlayerMovementNew : MonoBehaviour
 
     void Update()
     {
-        // Calculate movement based on isometric directions
         /*Vector3 forwardMovement = Input.GetAxisRaw("Vertical") * isometricForward;
         Vector3 sideMovement = Input.GetAxisRaw("Horizontal") * isometricRight;
         movement = (forwardMovement + sideMovement).normalized * moveSpeed;*/
@@ -55,7 +56,7 @@ public class PlayerMovementNew : MonoBehaviour
             velocity.y = -2f; // Small downward force to keep player grounded
 
             // Jump
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetKey(jumpKey))
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
@@ -74,7 +75,7 @@ public class PlayerMovementNew : MonoBehaviour
         }
 
         // Dodge
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time >= lastDodgeTime + dodgeCooldown && !isDodging)
+        if (Input.GetKeyDown(dodgeKey) && Time.time >= lastDodgeTime + dodgeCooldown && !isDodging)
         {
             StartCoroutine(Dodge(movement));
         }

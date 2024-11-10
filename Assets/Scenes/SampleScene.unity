@@ -331,10 +331,12 @@ GameObject:
   m_Component:
   - component: {fileID: 676643720}
   - component: {fileID: 676643722}
-  - component: {fileID: 676643721}
-  - component: {fileID: 676643724}
-  - component: {fileID: 676643723}
   - component: {fileID: 676643725}
+  - component: {fileID: 676643726}
+  - component: {fileID: 676643721}
+  - component: {fileID: 676643723}
+  - component: {fileID: 676643727}
+  - component: {fileID: 676643728}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -350,15 +352,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 676643719}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0.92387956, z: 0, w: 0.38268343}
+  m_LocalPosition: {x: -2, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 510628174}
   - {fileID: 1918523256}
   m_Father: {fileID: 1102541046}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 135, z: 0}
 --- !u!114 &676643721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,6 +384,8 @@ MonoBehaviour:
   downKey: 115
   leftKey: 97
   rightKey: 100
+  jumpKey: 32
+  dodgeKey: 304
 --- !u!143 &676643722
 CharacterController:
   m_ObjectHideFlags: 0
@@ -422,23 +426,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthBar: {fileID: 1960090969}
---- !u!114 &676643724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 676643719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 213a1ed2ec535344fb398cc7ca058887, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitbox: {fileID: 1918523257}
-  attackDamage: 10
-  attackDuration: 0.2
-  spinDuration: 0.2
-  attackKey: 117
 --- !u!54 &676643725
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -466,6 +453,48 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &676643726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676643719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb69e344a9339484da47f5bca33f74a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &676643727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676643719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 613f7143602a42d4c82d3f9148fadb4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  primaryAbilityKey: 101
+  secondaryAbilityKey: 113
+--- !u!114 &676643728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676643719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 956326a027880e243bcfe6be87e4d4d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitbox: {fileID: 1918523257}
+  attackDamage: 10
+  attackDuration: 0.2
+  spinDuration: 0.2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,10 +1598,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1666939612}
   - component: {fileID: 1666939611}
-  - component: {fileID: 1666939610}
-  - component: {fileID: 1666939609}
-  - component: {fileID: 1666939608}
   - component: {fileID: 1666939613}
+  - component: {fileID: 1666939614}
+  - component: {fileID: 1666939610}
+  - component: {fileID: 1666939608}
+  - component: {fileID: 1666939615}
+  - component: {fileID: 1666939616}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Player
@@ -1594,23 +1625,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthBar: {fileID: 2111922854}
---- !u!114 &1666939609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1666939607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 213a1ed2ec535344fb398cc7ca058887, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitbox: {fileID: 2004722343}
-  attackDamage: 10
-  attackDuration: 0.2
-  spinDuration: 0.2
-  attackKey: 109
 --- !u!114 &1666939610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1630,10 +1644,12 @@ MonoBehaviour:
   dodgeSpeed: 3
   dodgeDuration: 0.1
   dodgeCooldown: 1
-  upKey: 273
-  downKey: 274
-  leftKey: 276
-  rightKey: 275
+  upKey: 264
+  downKey: 261
+  leftKey: 260
+  rightKey: 262
+  jumpKey: 256
+  dodgeKey: 271
 --- !u!143 &1666939611
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1668,15 +1684,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1666939607}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 2, y: 0, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1541207296}
   - {fileID: 2004722342}
   m_Father: {fileID: 1102541046}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
 --- !u!54 &1666939613
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1704,6 +1720,48 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1666939614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666939607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79bc775c474d384ca140d664d87ae89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1666939615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666939607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 613f7143602a42d4c82d3f9148fadb4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  primaryAbilityKey: 127
+  secondaryAbilityKey: 279
+--- !u!114 &1666939616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666939607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 956326a027880e243bcfe6be87e4d4d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitbox: {fileID: 2004722343}
+  attackDamage: 10
+  attackDuration: 0.2
+  spinDuration: 0.2
 --- !u!1 &1822321345
 GameObject:
   m_ObjectHideFlags: 0
