@@ -18,7 +18,7 @@ public class LongRangeCharacter : Character
         }
 
         primaryAbility = GetComponent<SpinAttack>(); 
-        //secondaryAbility = GetComponent<Shield>();   
+        secondaryAbility = GetComponent<FireMissile>();   
 
         Debug.Log("LongRangeCharacter initialized with SpinAttack ability.");
     }

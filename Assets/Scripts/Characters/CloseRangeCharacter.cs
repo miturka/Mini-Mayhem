@@ -19,7 +19,7 @@ public class CloseRangeCharacter : Character
         }
 
         primaryAbility = GetComponent<SpinAttack>(); 
-        //secondaryAbility = GetComponent<Shield>();   
+        secondaryAbility = GetComponent<FireMissile>();   
 
         Debug.Log("CloseRangeCharacter initialized with SpinAttack ability.");
     }

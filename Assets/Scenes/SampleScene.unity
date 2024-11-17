@@ -331,12 +331,13 @@ GameObject:
   m_Component:
   - component: {fileID: 676643720}
   - component: {fileID: 676643722}
-  - component: {fileID: 676643725}
+  - component: {fileID: 676643729}
   - component: {fileID: 676643726}
   - component: {fileID: 676643721}
   - component: {fileID: 676643723}
   - component: {fileID: 676643727}
   - component: {fileID: 676643728}
+  - component: {fileID: 676643730}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -426,33 +427,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthBar: {fileID: 1960090969}
---- !u!54 &676643725
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 676643719}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &676643726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,10 +465,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 956326a027880e243bcfe6be87e4d4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 1
+  knockbackForce: 10
+  knockbackDuration: 0.5
+  knockbackDirectionOffset: {x: 0, y: 1, z: 0}
   hitbox: {fileID: 1918523257}
   attackDamage: 10
   attackDuration: 0.2
   spinDuration: 0.2
+--- !u!54 &676643729
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676643719}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &676643730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676643719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd945fea6402aa4c84c47a5357ac813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 3
+  knockbackForce: 10
+  knockbackDuration: 0.2
+  knockbackDirectionOffset: {x: 0, y: 1, z: 0}
+  missilePrefab: {fileID: 0}
+  spawnOffset: 1
+  opponent: {fileID: 1666939612}
+  projectileSpeed: 10
+  projectileDamage: 20
+  projectileLifetime: 5
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1598,12 +1625,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1666939612}
   - component: {fileID: 1666939611}
-  - component: {fileID: 1666939613}
+  - component: {fileID: 1666939617}
   - component: {fileID: 1666939614}
   - component: {fileID: 1666939610}
   - component: {fileID: 1666939608}
   - component: {fileID: 1666939615}
   - component: {fileID: 1666939616}
+  - component: {fileID: 1666939618}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Player
@@ -1693,33 +1721,6 @@ Transform:
   - {fileID: 2004722342}
   m_Father: {fileID: 1102541046}
   m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
---- !u!54 &1666939613
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1666939607}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &1666939614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1758,10 +1759,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 956326a027880e243bcfe6be87e4d4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 3
+  knockbackForce: 5
+  knockbackDuration: 0.2
+  knockbackDirectionOffset: {x: 0, y: 1, z: 0}
   hitbox: {fileID: 2004722343}
   attackDamage: 10
   attackDuration: 0.2
   spinDuration: 0.2
+--- !u!54 &1666939617
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666939607}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &1666939618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666939607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd945fea6402aa4c84c47a5357ac813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 3
+  knockbackForce: 10
+  knockbackDuration: 0.2
+  knockbackDirectionOffset: {x: 0, y: 1, z: 0}
+  missilePrefab: {fileID: 0}
+  spawnOffset: 1
+  opponent: {fileID: 676643720}
+  projectileSpeed: 10
+  projectileDamage: 20
+  projectileLifetime: 5
 --- !u!1 &1822321345
 GameObject:
   m_ObjectHideFlags: 0
