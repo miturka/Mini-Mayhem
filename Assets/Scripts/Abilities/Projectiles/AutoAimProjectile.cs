@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Missile : MonoBehaviour
+public class AutoAimProjectile : MonoBehaviour
 {
     public float speed; // Speed of the projectile
     public float rotationSpeed = 200f; // Rotation speed for homing
@@ -52,12 +52,13 @@ public class Missile : MonoBehaviour
         if (health != null)
         {
             health.TakeDamage(damage);
+            if (health.IsAlive()){
+            CharacterController opponentController = other.GetComponent<CharacterController>();
+            if (opponentController != null)
+            {
+                parentAbility.ApplyKnockback(opponentController, transform.position);
+            }
         }
-
-        CharacterController opponentController = other.GetComponent<CharacterController>();
-        if (opponentController != null)
-        {
-            parentAbility.ApplyKnockback(opponentController, transform.position);
         }
 
         // Destroy the projectile on impact

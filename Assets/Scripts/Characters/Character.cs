@@ -19,4 +19,5 @@ public abstract class Character : MonoBehaviour
     public void UsePrimaryAbility() => primaryAbility?.Activate();
     public void UseSecondaryAbility() => secondaryAbility?.Activate();
     public void TakeDamage(int amount) => health?.TakeDamage(amount);
+    public bool IsAlive() => (bool)(health?.IsAlive());
 }

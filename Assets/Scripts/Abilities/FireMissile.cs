@@ -41,7 +41,7 @@ public class FireMissile : BaseAbility
 
         // Instantiate and initialize the projectile
         GameObject missileGO = Instantiate(missilePrefab, spawnPosition, Quaternion.LookRotation(directionToOpponent));
-        Missile missile = missileGO.GetComponent<Missile>();
+        AutoAimProjectile missile = missileGO.GetComponent<AutoAimProjectile>();
 
         if (missile != null)
         {

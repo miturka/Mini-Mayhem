@@ -10,6 +10,19 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
     public float knockbackDuration = 0.2f; // Duration of the knockback effect
     public Vector3 knockbackDirectionOffset = new Vector3(0, 1, 0); // Default upward offset
 
+    protected Transform firePoint;
+
+    private void Awake()
+    {
+        // Automatically find the FirePoint child object
+        firePoint = transform.Find("FirePoint");
+
+        if (firePoint == null)
+        {
+            Debug.LogError($"FirePoint not found on {gameObject.name}. Make sure it exists as a child object.");
+        }
+    }
+
     public void Activate()
     {
         if (IsOnCooldown())
