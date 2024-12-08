@@ -13,12 +13,15 @@ public class CircleScript : MonoBehaviour
     private LineRenderer lineRenderer;
     private float currentRadius = 0.5f; // Starting radius of the ring
 
-    public void Initialize(float newSpeed, float newRadius, float newWidth, BaseAbility ability)
+    private PlayerMovement playerMovement;
+
+    public void Initialize(float newSpeed, float newRadius, float newWidth, BaseAbility ability, PlayerMovement movement)
     {
         expansionSpeed = newSpeed;
         maxRadius = newRadius ;
         ringWidth = newWidth;
         parentAbility = ability;
+        playerMovement = movement;
     }
 
     void Start()
@@ -36,6 +39,8 @@ public class CircleScript : MonoBehaviour
         lineRenderer.endWidth = ringWidth;
         lineRenderer.useWorldSpace = false; // Keeps the ring local to the GameObject
         lineRenderer.positionCount = segments;
+        playerMovement.FreezeMovement();
+
     }
 
     void Update()
@@ -59,12 +64,13 @@ public class CircleScript : MonoBehaviour
         {
             // Destroy the ring when it reaches its maximum size
             Destroy(gameObject);
+            playerMovement.UnfreezeMovement();
         }
     }
 
     void DrawRing(float radius)
     {
-        float angle = 0f;
+        float angle = 0f;;
         for (int i = 0; i < segments; i++)
         {
             // Calculate the position of each point along the ring

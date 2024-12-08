@@ -28,6 +28,11 @@ public class HealthManager : MonoBehaviour
     private void Die()
     {
         Debug.Log(gameObject.name + " has been defeated.");
+        GameLogic gameLogic = FindObjectOfType<GameLogic>();
+        if (gameLogic != null)
+        {
+            gameLogic.PlayerDied(gameObject);
+        }
         gameObject.SetActive(false); // Disables the player
     }
 

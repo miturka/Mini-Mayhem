@@ -12,6 +12,8 @@ public class Shockwave : BaseAbility
 
     protected override void Execute()
     {
+        circlePrefab = Resources.Load<GameObject>("Prefabs/ExpandingCircle");
+
         if (circlePrefab == null)
         {
             Debug.LogError("Circle Prefab is not assigned!");
@@ -24,9 +26,10 @@ public class Shockwave : BaseAbility
 
         // Pass this ability to the circle for knockback handling
         CircleScript circleScript = circle.GetComponent<CircleScript>();
+        PlayerMovement movement = GetComponent<PlayerMovement>();
         if (circleScript != null)
         {
-            circleScript.Initialize(expansionSpeed, maxRadius, ringWidth, this);
+            circleScript.Initialize(expansionSpeed, maxRadius, ringWidth, this, movement);
         }
     }
 }

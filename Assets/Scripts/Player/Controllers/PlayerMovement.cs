@@ -29,6 +29,9 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode dodgeKey = KeyCode.LeftShift;
 
+    public bool isFrozen = false;
+    public bool isRapidFiring = false;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -37,6 +40,13 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         movement = Vector3.zero;
+
+        if (isFrozen){
+            if (isRapidFiring){
+                HandleRotation(200.0f);
+            }
+            return;
+        } 
 
         if (Input.GetKey(upKey)) movement += isometricForward;
         if (Input.GetKey(downKey)) movement -= isometricForward;
@@ -95,5 +105,40 @@ public class PlayerMovement : MonoBehaviour
         }
 
         isDodging = false;
+    }
+
+    public void FreezeMovement()
+    {
+        isFrozen = true;
+    }
+
+    public void UnfreezeMovement()
+    {
+        isFrozen = false;
+    }
+
+    public void RapidFireEnabled(){
+        //FreezeMovement();
+        //isRapidFiring = true;
+        moveSpeed /= 2;
+    }
+
+    public void RapidFireDisabled(){
+        //UnfreezeMovement();
+        //isRapidFiring = false;
+        moveSpeed *= 2;
+    }
+
+    public void HandleRotation(float rotationSpeed)
+    {
+        // Rotate player based on input
+        if (Input.GetKey(leftKey))
+        {
+            controller.transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
+        }
+        if (Input.GetKey(rightKey))
+        {
+            controller.transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+        }
     }
 }

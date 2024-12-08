@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BasicProjectile : MonoBehaviour
+public class Bullet : MonoBehaviour
 {
     private float speed;
     private int damage;
@@ -22,7 +22,10 @@ public class BasicProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Nieco hitla raketa");
+        if (other.CompareTag("Player") && other.transform == transform)
+        {
+            return; // Ignore collisions with the firing player
+        }
         // Apply damage if the projectile hits the target
         HealthManager health = other.GetComponent<HealthManager>();
         if (health != null)
@@ -37,9 +40,6 @@ public class BasicProjectile : MonoBehaviour
         }
         }
 
-        
-
-        // Destroy the projectile on impact
         Destroy(gameObject);
 
         // Optionally, trigger an explosion or visual effect here

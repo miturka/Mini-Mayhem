@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class AbilityController : MonoBehaviour
 {
-    private Character character;
+    private Player character;
 
     public KeyCode primaryAbilityKey = KeyCode.Q;
     public KeyCode secondaryAbilityKey = KeyCode.E;
 
     void Start()
     {
-        character = GetComponent<Character>();
+        character = GetComponent<Player>();
     }
 
     void Update()

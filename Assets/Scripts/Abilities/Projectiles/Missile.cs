@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AutoAimProjectile : MonoBehaviour
+public class Missile : MonoBehaviour
 {
     public float speed; // Speed of the projectile
     public float rotationSpeed = 200f; // Rotation speed for homing

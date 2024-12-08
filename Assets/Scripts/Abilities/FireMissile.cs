@@ -15,6 +15,7 @@ public class FireMissile : BaseAbility
 
     private void Start()
     {
+        opponent = GameLogic.Instance.GetOpponent(gameObject);
         if (opponent == null)
         {
             Debug.LogError("Opponent is not assigned.");
@@ -25,7 +26,6 @@ public class FireMissile : BaseAbility
     {
 
         missilePrefab = Resources.Load<GameObject>(missilePrefabPath);
-
         if (missilePrefab == null)
         {
             Debug.LogError($"Missile prefab not found at path: {missilePrefabPath}");
@@ -41,7 +41,7 @@ public class FireMissile : BaseAbility
 
         // Instantiate and initialize the projectile
         GameObject missileGO = Instantiate(missilePrefab, spawnPosition, Quaternion.LookRotation(directionToOpponent));
-        AutoAimProjectile missile = missileGO.GetComponent<AutoAimProjectile>();
+        Missile missile = missileGO.GetComponent<Missile>();
 
         if (missile != null)
         {

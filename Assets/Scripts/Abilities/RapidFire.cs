@@ -10,6 +10,8 @@ public class RapidFire : BaseAbility
     public float projectileSpeed = 10f;    // Speed of the pcrojectile
     public int projectileDamage = 5;       // Damage of each projectile
 
+    public float rotationSpeed = 200f; 
+
     private bool isFiring = false;
 
     protected override void Execute()
@@ -22,8 +24,11 @@ public class RapidFire : BaseAbility
 
     private IEnumerator RapidFireRoutine()
     {
+        projectilePrefab = Resources.Load<GameObject>("Prefabs/BasicMissile");
         isFiring = true;
         float elapsedTime = 0f;
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+        movement.RapidFireEnabled();
 
         while (elapsedTime < abilityDuration)
         {
@@ -31,7 +36,7 @@ public class RapidFire : BaseAbility
 
             // Create a projectile
             GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-            BasicProjectile basicProjectile = projectile.GetComponent<BasicProjectile>();
+            Bullet basicProjectile = projectile.GetComponent<Bullet>();
 
             // Initialize the projectile's properties
             if (basicProjectile != null)
@@ -43,5 +48,7 @@ public class RapidFire : BaseAbility
         }
 
         isFiring = false;
+        movement.RapidFireDisabled();
     }
+
 }

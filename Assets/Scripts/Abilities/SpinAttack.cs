@@ -7,7 +7,7 @@ public class SpinAttack :  BaseAbility
     public Collider hitbox;
     public int attackDamage = 10;
     public float attackDuration = 0.2f;
-    public float spinDuration = 0.5f;
+    public float spinDuration = 0.2f;
 
     private bool isAttacking = false;
     private HashSet<GameObject> hitTargets = new HashSet<GameObject>(); // Track objects hit during an attack
@@ -22,6 +22,7 @@ public class SpinAttack :  BaseAbility
 
     protected override void Execute()
     {
+        hitbox = transform.Find("PunchHitbox").GetComponent<CapsuleCollider>();
         if (!isAttacking)
         {
             StartCoroutine(PerformAttack());
@@ -36,6 +37,9 @@ public class SpinAttack :  BaseAbility
         if (hitbox != null)
         {
             hitbox.enabled = true;  // Enable the hitbox for detecting hits
+        }
+        else{
+            Debug.Log("hitbox je nullllllll");
         }
 
         yield return StartCoroutine(SpinAnimation()); // Perform spin animation
