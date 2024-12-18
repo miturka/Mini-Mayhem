@@ -17,7 +17,12 @@ public class AbilitySelectionManager : MonoBehaviour
         "FireMissile",
         "RapidFire",
         "Shockwave",
-        "SpinAttack"
+        "SpinAttack",
+        "GrappleAndSlam",
+        "DuelBreaker",
+        "ChronoFlurry",
+        "BlightZone"
+
     };
 
     void Start()

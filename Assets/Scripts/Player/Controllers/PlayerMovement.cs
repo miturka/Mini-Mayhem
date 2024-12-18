@@ -1,10 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    private float currentSpeed;
+    private float speedMultiplier = 1f; // Multiplier for speed changes
     public float jumpHeight = 2f;
     public float gravity = -9.81f;
     public float gravityMultiplier = 2f;
@@ -35,27 +36,30 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        currentSpeed = moveSpeed; // Initialize currentSpeed with the base moveSpeed
     }
 
     void Update()
     {
         movement = Vector3.zero;
 
-        if (isFrozen){
-            if (isRapidFiring){
+        if (isFrozen)
+        {
+            if (isRapidFiring)
+            {
                 HandleRotation(200.0f);
             }
             return;
-        } 
+        }
 
         if (Input.GetKey(upKey)) movement += isometricForward;
         if (Input.GetKey(downKey)) movement -= isometricForward;
         if (Input.GetKey(leftKey)) movement -= isometricRight;
         if (Input.GetKey(rightKey)) movement += isometricRight;
 
-        movement = movement.normalized * moveSpeed;
+        // Apply speed multiplier
+        movement = movement.normalized * (currentSpeed * speedMultiplier);
 
-        // Use CharacterController's built-in isGrounded property
         if (controller.isGrounded)
         {
             velocity.y = -2f; // Small downward force to keep player grounded
@@ -117,21 +121,28 @@ public class PlayerMovement : MonoBehaviour
         isFrozen = false;
     }
 
-    public void RapidFireEnabled(){
-        //FreezeMovement();
-        //isRapidFiring = true;
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        speedMultiplier = multiplier;
+    }
+
+    public void ResetSpeedMultiplier()
+    {
+        speedMultiplier = 1f;
+    }
+
+    public void RapidFireEnabled()
+    {
         moveSpeed /= 2;
     }
 
-    public void RapidFireDisabled(){
-        //UnfreezeMovement();
-        //isRapidFiring = false;
+    public void RapidFireDisabled()
+    {
         moveSpeed *= 2;
     }
 
     public void HandleRotation(float rotationSpeed)
     {
-        // Rotate player based on input
         if (Input.GetKey(leftKey))
         {
             controller.transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
