@@ -18,7 +18,7 @@ public class AbilitySelectionManager : MonoBehaviour
         "RapidFire",
         "Shockwave",
         "SpinAttack",
-        "GrappleAndSlam",
+        "GroundSlam",
         "DuelBreaker",
         "ChronoFlurry",
         "BlightZone"
