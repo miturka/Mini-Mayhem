@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ChronoFlurry : MonoBehaviour, IAbility
+public class ChronoFlurry : BaseAbility
 {
     public int numberOfHits = 5;
     public float hitDamage = 10f;
     public float finisherDamage = 30f;
     public float timeBetweenHits = 0.2f;
-    public float knockbackForce = 5f;
-    public float cooldownTime = 6f;
     public float attackRange = 2f;
 
     public Transform opponent;
@@ -16,23 +14,17 @@ public class ChronoFlurry : MonoBehaviour, IAbility
     public AudioClip flurrySound;
     public AudioClip finisherSound;
 
-    private bool isOnCooldown = false;
-    private float cooldownTimer = 0f;
     private AudioSource audioSource;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
+
+        opponent = GameLogic.Instance.GetOpponent(gameObject);
     }
 
-    public void Activate()
+    protected override void Execute()
     {
-        if (IsOnCooldown())
-        {
-            Debug.Log("Chrono Flurry is on cooldown.");
-            return;
-        }
-
         if (opponent == null)
         {
             Debug.LogWarning("No opponent assigned for Chrono Flurry!");
@@ -48,20 +40,8 @@ public class ChronoFlurry : MonoBehaviour, IAbility
         StartCoroutine(PerformChronoFlurry());
     }
 
-    public bool IsOnCooldown()
-    {
-        return isOnCooldown;
-    }
-
-    public float GetCooldown()
-    {
-        return cooldownTimer;
-    }
-
     private IEnumerator PerformChronoFlurry()
     {
-        isOnCooldown = true;
-        cooldownTimer = cooldownTime;
         Debug.Log("Chrono Flurry activated!");
 
         for (int i = 0; i < numberOfHits; i++)
@@ -77,21 +57,11 @@ public class ChronoFlurry : MonoBehaviour, IAbility
             PerformHit(finisherDamage, true);
             PlaySound(finisherSound);
         }
-
-        while (cooldownTimer > 0)
-        {
-            cooldownTimer -= Time.deltaTime;
-            yield return null;
-        }
-
-        isOnCooldown = false;
-        Debug.Log("Chrono Flurry is ready to use again.");
     }
 
     private void PerformHit(float damage, bool isFinisher)
     {
         if (!IsOpponentInRange()) return;
-
 
         // Apply damage
         HealthManager health = opponent.GetComponent<HealthManager>();
@@ -102,20 +72,13 @@ public class ChronoFlurry : MonoBehaviour, IAbility
         }
 
         // Apply knockback on finisher
-        if (isFinisher) ApplyKnockback();
+        if (isFinisher)
+        {
+            ApplyKnockback(opponent.GetComponent<CharacterController>(), transform.position);
+        }
 
         // Play hit effect
         PlayHitEffect();
-    }
-
-    private void ApplyKnockback()
-    {
-        Rigidbody rb = opponent.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            Vector3 knockbackDirection = (opponent.position - transform.position).normalized;
-            rb.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
-        }
     }
 
     private void PlayHitEffect()
@@ -137,14 +100,6 @@ public class ChronoFlurry : MonoBehaviour, IAbility
     private bool IsOpponentInRange()
     {
         return opponent != null && Vector3.Distance(transform.position, opponent.position) <= attackRange;
-    }
-
-    private void Update()
-    {
-        if (isOnCooldown)
-        {
-            cooldownTimer = Mathf.Max(0, cooldownTimer - Time.deltaTime);
-        }
     }
 
     private void OnDrawGizmosSelected()
