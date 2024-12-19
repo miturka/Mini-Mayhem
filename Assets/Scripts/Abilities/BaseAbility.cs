@@ -8,11 +8,13 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
     [Header("Knockback Settings")]
     public float knockbackForce = 10f; // Force of the knockback
     public float knockbackDuration = 0.2f; // Duration of the knockback effect
+
+    public float speedMultiplier = 1.5f;
     public Vector3 knockbackDirectionOffset = new Vector3(0, 1, 0); // Default upward offset
 
     protected Transform firePoint;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         // Automatically find the FirePoint child object
         firePoint = transform.Find("FirePoint");
@@ -54,8 +56,16 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
         StartCoroutine(ApplyKnockbackCoroutine(target, knockbackDirection, knockbackForce, knockbackDuration));
     }
 
+    internal void ApplyKnockbackV2(CharacterController target, Vector3 knockbackOrigin)
+    {
+        Vector3 knockbackDirection = (target.transform.position - knockbackOrigin).normalized + knockbackDirectionOffset;
+        StartCoroutine(ApplyKnockbackCoroutineV2(target, knockbackDirection, knockbackForce));
+    }
+
     private System.Collections.IEnumerator ApplyKnockbackCoroutine(CharacterController target, Vector3 direction, float force, float duration)
     {
+        PlayerMovement targetMovement = target.gameObject.GetComponent<PlayerMovement>();
+        targetMovement.FreezeMovement();
         float elapsedTime = 0f;
         Vector3 velocity = direction.normalized * force;
 
@@ -69,5 +79,47 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+        targetMovement.UnfreezeMovement();
     }
+
+    private System.Collections.IEnumerator ApplyKnockbackCoroutineV2(CharacterController target, Vector3 direction, float force)
+    {
+        PlayerMovement targetMovement = target.gameObject.GetComponent<PlayerMovement>();
+        targetMovement.FreezeMovement();
+
+        // Zvýšenie rýchlosti pomocou multiplier
+        Vector3 horizontalVelocity = new Vector3(direction.x, 0, direction.z).normalized * force * speedMultiplier;
+        float verticalVelocity = Mathf.Max(0, direction.y) * force * speedMultiplier;
+
+        float knockbackTimer = 0.2f; // Čas, kedy je hráč "nútene vo vzduchu"
+        bool forceAirborne = true;
+
+        while (forceAirborne || !target.isGrounded)
+        {
+            if (knockbackTimer > 0)
+            {
+                knockbackTimer -= Time.deltaTime;
+            }
+            else
+            {
+                forceAirborne = false;
+            }
+
+            // Rýchlejšie pridávanie gravitácie (zrýchlený pohyb dole)
+            verticalVelocity += Physics.gravity.y * Time.deltaTime * speedMultiplier;
+
+            // Kombinácia zrýchlenej horizontálnej a vertikálnej zložky
+            Vector3 velocity = horizontalVelocity + Vector3.up * verticalVelocity;
+
+            // Rýchlejší pohyb
+            target.Move(velocity * Time.deltaTime);
+
+            yield return null;
+        }
+
+        targetMovement.UnfreezeMovement();
+    }
+
+
+
 }

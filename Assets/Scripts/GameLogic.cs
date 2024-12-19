@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameLogic : MonoBehaviour
 {
@@ -13,31 +14,14 @@ public class GameLogic : MonoBehaviour
     public Image p1HealthBar;
     public Image p2HealthBar;
 
+    public TextMeshProUGUI p1Health;
+    public TextMeshProUGUI p2Health;
+
     public Vector3 player1SpawnPosition = new Vector3(-2, 0, 2);
     public Vector3 player2SpawnPosition = new Vector3(2, 0, -2);
 
     public Vector3 player1SpawnRotation = new Vector3(0, 135, 0);
     public Vector3 player2SpawnRotation = new Vector3(0, -45, 0);
-
-    [Header("Player1 Controls")]
-    public KeyCode p1UpKey = KeyCode.W;
-    public KeyCode p1DownKey = KeyCode.S;
-    public KeyCode p1LeftKey = KeyCode.A;
-    public KeyCode p1RightKey = KeyCode.D;
-    public KeyCode p1JumpKey = KeyCode.Space;
-    public KeyCode p1DodgeKey = KeyCode.LeftShift;
-    public KeyCode p1PrimaryAbilityKey = KeyCode.Q;
-    public KeyCode p1SecondaryAbilityKey = KeyCode.E;
-
-    [Header("Player2 Controls")]
-    public KeyCode p2UpKey = KeyCode.W;
-    public KeyCode p2DownKey = KeyCode.S;
-    public KeyCode p2LeftKey = KeyCode.A;
-    public KeyCode p2RightKey = KeyCode.D;
-    public KeyCode p2JumpKey = KeyCode.Space;
-    public KeyCode p2DodgeKey = KeyCode.LeftShift;
-    public KeyCode p2PrimaryAbilityKey = KeyCode.Q;
-    public KeyCode p2SecondaryAbilityKey = KeyCode.E;
 
     public GameObject playerPrefab;
 
@@ -46,9 +30,11 @@ public class GameLogic : MonoBehaviour
     private float remainingTime;
     private bool isGameActive = false;
 
-    public TMPro.TextMeshProUGUI timerText; // UI text for the timer
+    public TextMeshProUGUI timerText; // UI text for the timer
     public GameObject gameOverPanel; // UI panel for showing game over
-    public TMPro.TextMeshProUGUI gameOverText; // UI text for game over message
+    public TextMeshProUGUI gameOverText; // UI text for game over message
+
+    public GameObject pauseMenuPanel; 
 
     private void Awake()
     {
@@ -71,6 +57,8 @@ public class GameLogic : MonoBehaviour
         string p2SecondaryName = PlayerPrefs.GetString("Player2Secondary", null);
 
         StartNewGame(p1PrimaryName, p1SecondaryName, p2PrimaryName, p2SecondaryName);
+
+        pauseMenuPanel.SetActive(false);
     }
 
     public void StartNewGame(String p1PrimaryName, String p1SecondaryName, String p2PrimaryName, String p2SecondaryName)
@@ -100,8 +88,8 @@ public class GameLogic : MonoBehaviour
         Player player1Script = player1.GetComponent<Player>();
         Player player2Script = player2.GetComponent<Player>();
 
-        player1Script.Initialize(p1HealthBar);
-        player2Script.Initialize(p2HealthBar);
+        player1Script.Initialize(p1HealthBar, p1Health);
+        player2Script.Initialize(p2HealthBar, p2Health);
 
         player1Script.AddAbility(p1PrimaryName, true);
         player1Script.AddAbility(p1SecondaryName, false);
@@ -113,15 +101,23 @@ public class GameLogic : MonoBehaviour
         AbilityController p1AbilityController = player1.GetComponent<AbilityController>();
         AbilityController p2AbilityController = player2.GetComponent<AbilityController>();
 
-        player2Movement.upKey = p2UpKey;
-        player2Movement.downKey = p2DownKey;
-        player2Movement.leftKey = p2LeftKey;
-        player2Movement.rightKey = p2RightKey;
-        player2Movement.jumpKey = p2JumpKey;
-        player2Movement.dodgeKey = p2DodgeKey;
-        p2AbilityController.primaryAbilityKey = p2PrimaryAbilityKey;
-        p2AbilityController.secondaryAbilityKey = p2SecondaryAbilityKey;
-        
+        player1Movement.upKey = GetKeyFromPrefs("0_Move Forward", KeyCode.W);
+        player1Movement.downKey = GetKeyFromPrefs("0_Move Back", KeyCode.A);
+        player1Movement.leftKey = GetKeyFromPrefs("0_Move Left", KeyCode.S);
+        player1Movement.rightKey = GetKeyFromPrefs("0_Move Right", KeyCode.D);
+        player1Movement.jumpKey = GetKeyFromPrefs("0_Jump", KeyCode.Space);
+        player1Movement.dodgeKey = GetKeyFromPrefs("0_Dodge", KeyCode.LeftShift);
+        p1AbilityController.primaryAbilityKey = GetKeyFromPrefs("0_Use Ability 1", KeyCode.Q);
+        p1AbilityController.secondaryAbilityKey = GetKeyFromPrefs("0_Use Ability 2", KeyCode.E);
+
+        player2Movement.upKey = GetKeyFromPrefs("1_Move Forward", KeyCode.Keypad8);
+        player2Movement.downKey = GetKeyFromPrefs("1_Move Back", KeyCode.Keypad5);
+        player2Movement.leftKey = GetKeyFromPrefs("1_Move Left", KeyCode.Keypad4);
+        player2Movement.rightKey = GetKeyFromPrefs("1_Move Right", KeyCode.Keypad6);
+        player2Movement.jumpKey = GetKeyFromPrefs("1_Jump", KeyCode.Keypad0);
+        player2Movement.dodgeKey = GetKeyFromPrefs("1_Dodge", KeyCode.KeypadEnter);
+        p2AbilityController.primaryAbilityKey = GetKeyFromPrefs("1_Use Ability 1", KeyCode.Delete);
+        p2AbilityController.secondaryAbilityKey = GetKeyFromPrefs("1_Use Ability 2", KeyCode.Home);
         
 
         if (player1 == null || player2 == null)
@@ -153,7 +149,40 @@ public class GameLogic : MonoBehaviour
             {
                 EndGame("Time's up! It's a draw.");
             }
+
+            // Check for Escape key to toggle pause menu
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (pauseMenuPanel.activeSelf)
+                {
+                    ResumeGame();
+                }
+                else
+                {
+                    PauseGame();
+                }
+            }
         }
+    }
+
+    public void PauseGame()
+    {
+        pauseMenuPanel.SetActive(true); // Zobraziť Pause Menu
+        Time.timeScale = 0f; // Zastaviť čas
+        isGameActive = false; // Pauznúť hru
+    }
+
+    public void ResumeGame()
+    {
+        pauseMenuPanel.SetActive(false); // Skryť Pause Menu
+        Time.timeScale = 1f; // Obnoviť čas
+        isGameActive = true; // Obnoviť hru
+    }
+
+    public void ExitToMainMenu()
+    {
+        Time.timeScale = 1f; // Obnoviť čas (ak by bolo pauznuté)
+        SceneManager.LoadScene("MainMenu"); // Prepnúť na hlavnú menu scénu
     }
 
     public void PlayerDied(GameObject deadPlayer)
@@ -222,6 +251,12 @@ public class GameLogic : MonoBehaviour
     public void ExitGame()
     {
         SceneManager.LoadScene("MenuSelect");
+    }
+
+    KeyCode GetKeyFromPrefs(string keyName, KeyCode defaultKey)
+    {
+        string keyString = PlayerPrefs.GetString(keyName, defaultKey.ToString()); // Načítanie hodnoty ako string
+        return (KeyCode)System.Enum.Parse(typeof(KeyCode), keyString); // Konverzia string na KeyCode
     }
 
 }

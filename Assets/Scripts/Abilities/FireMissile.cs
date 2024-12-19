@@ -13,6 +13,12 @@ public class FireMissile : BaseAbility
 
     private string missilePrefabPath = "Prefabs/Missile";
 
+    protected override void Awake()
+    {
+        knockbackForce = 3f;
+        speedMultiplier = 3f;
+    }
+
     private void Start()
     {
         opponent = GameLogic.Instance.GetOpponent(gameObject);

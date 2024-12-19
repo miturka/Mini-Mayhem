@@ -5,12 +5,20 @@ public class SpinAttack :  BaseAbility
 {
     [Header("Abillity Settings")]
     public Collider hitbox;
-    public int attackDamage = 10;
+    public int attackDamage = 2;
     public float attackDuration = 0.2f;
     public float spinDuration = 0.2f;
 
+
     private bool isAttacking = false;
     private HashSet<GameObject> hitTargets = new HashSet<GameObject>(); // Track objects hit during an attack
+
+    protected override void Awake()
+    {
+        cooldown = 0.5f;
+        knockbackForce = 1.6f;
+        speedMultiplier = 5.0f;
+    }
 
     private void Start()
     {
@@ -23,7 +31,9 @@ public class SpinAttack :  BaseAbility
     protected override void Execute()
     {
         hitbox = transform.Find("PunchHitbox").GetComponent<CapsuleCollider>();
-        if (!isAttacking)
+        Player playerScript = GetComponent<Player>();
+        
+        if (!isAttacking && !playerScript.isHitBySpinAttack)
         {
             StartCoroutine(PerformAttack());
         }
@@ -76,6 +86,9 @@ public class SpinAttack :  BaseAbility
         {
             Debug.Log("Hit another player: " + other.name);
 
+            Player otherplayerScript = other.GetComponent<Player>();
+            otherplayerScript.HitBySpinAttack();
+
             // Add the target to the hit list to prevent repeated hits
             hitTargets.Add(other.gameObject);
 
@@ -92,7 +105,7 @@ public class SpinAttack :  BaseAbility
                 CharacterController opponentController = other.GetComponent<CharacterController>();
                 if (opponentController != null)
                 {
-                    ApplyKnockback(opponentController, transform.position);
+                    ApplyKnockbackV2(opponentController, transform.position);
                 }
             }
             

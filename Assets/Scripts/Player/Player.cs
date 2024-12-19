@@ -3,11 +3,14 @@ using UnityEngine.UI;
 using System;
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine.UIElements;
+using System.Collections;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     protected PlayerMovement movement;
     protected HealthManager health;
+
 
     
     [Header("Abilities")]
@@ -21,8 +24,10 @@ public class Player : MonoBehaviour
     public void setPrimaryAbility(BaseAbility ability) => primaryAbility = ability;
     public void setSecondaryAbility(BaseAbility ability) => secondaryAbility = ability;
 
+    public bool isHitBySpinAttack = false;
 
-    public void Initialize(UnityEngine.UI.Image healthBar, int maxHealth=100, float moveSpeed=5.0f, float jumpHeight=2.0f){
+
+    public void Initialize(UnityEngine.UI.Image healthBar, TextMeshProUGUI healthNum, int maxHealth=100, float moveSpeed=5.0f, float jumpHeight=2.0f){
         movement = GetComponent<PlayerMovement>();
         health = GetComponent<HealthManager>();
         if (movement != null)
@@ -35,6 +40,7 @@ public class Player : MonoBehaviour
         {
             health.maxHealth = maxHealth;
             health.healthBar = healthBar;
+            health.healthNum = healthNum;
             health.InitializeHealth();
         }
         else{
@@ -71,5 +77,17 @@ public class Player : MonoBehaviour
         {
             secondaryAbility = ability;
         }
+    }
+
+    public void HitBySpinAttack(){
+        isHitBySpinAttack = true;
+        StartCoroutine(WaitOnly());
+
+    }
+
+    IEnumerator WaitOnly()
+    {
+        yield return new WaitForSeconds(0.2f);
+        isHitBySpinAttack = false;
     }
 }

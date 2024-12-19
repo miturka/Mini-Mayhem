@@ -29,10 +29,11 @@ public class AbilitySelectionManager : MonoBehaviour
         PopulateDropdown(player1SecondaryDropdown);
         PopulateDropdown(player2PrimaryDropdown);
         PopulateDropdown(player2SecondaryDropdown);
-        player1PrimaryDropdown.value = 0;
-        player1SecondaryDropdown.value = 1;
-        player2PrimaryDropdown.value = 2;
-        player2SecondaryDropdown.value = 3; 
+        // Defaultne values
+        player1PrimaryDropdown.value = 1;
+        player1SecondaryDropdown.value = 2;
+        player2PrimaryDropdown.value = 1;
+        player2SecondaryDropdown.value = 2; 
     }
 
     void PopulateDropdown(TMP_Dropdown dropdown)
@@ -58,5 +59,10 @@ public class AbilitySelectionManager : MonoBehaviour
 
         // Prepneme na hernú scénu
         SceneManager.LoadScene("GameScene");
+    }
+
+    public void OpenSettings()
+    {
+        SceneManager.LoadScene("ControlsScene"); // Prechod na scénu nastavení
     }
 }

@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && other.transform == transform)
+        if ((other.CompareTag("Player") && other.transform == transform) || other.CompareTag("Bullet")) 
         {
             return; // Ignore collisions with the firing player
         }
@@ -35,7 +35,7 @@ public class Bullet : MonoBehaviour
             CharacterController opponentController = other.GetComponent<CharacterController>();
             if (opponentController != null)
             {
-                parentAbility.ApplyKnockback(opponentController, transform.position);
+                parentAbility.ApplyKnockbackV2(opponentController, transform.position);
             }
         }
         }

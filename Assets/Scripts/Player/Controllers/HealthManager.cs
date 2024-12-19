@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,8 @@ public class HealthManager : MonoBehaviour
     public int maxHealth = 100;
     private int currentHealth;
     public Image healthBar;
+    
+    public TextMeshProUGUI healthNum;
 
     public void InitializeHealth()
     {
@@ -47,5 +50,7 @@ public class HealthManager : MonoBehaviour
         {
             healthBar.fillAmount = (float)currentHealth / maxHealth;
         }
+
+        healthNum.text = Mathf.RoundToInt(currentHealth).ToString() ;
     }
 }
