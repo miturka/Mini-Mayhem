@@ -139,10 +139,22 @@ public class GameLogic : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (pauseMenuPanel.activeSelf)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
+            }
+        }
         if (isGameActive)
         {
             // Update the game timer
             remainingTime -= Time.deltaTime;
+            remainingTime = Mathf.Max(remainingTime, 0);
             UpdateTimerUI();
 
             if (remainingTime <= 0)
@@ -151,17 +163,7 @@ public class GameLogic : MonoBehaviour
             }
 
             // Check for Escape key to toggle pause menu
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (pauseMenuPanel.activeSelf)
-                {
-                    ResumeGame();
-                }
-                else
-                {
-                    PauseGame();
-                }
-            }
+            
         }
     }
 

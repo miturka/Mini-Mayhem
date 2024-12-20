@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpinAttack :  BaseAbility
+public class BasicAttack :  BaseAbility
 {
     [Header("Abillity Settings")]
     public Collider hitbox;
@@ -9,7 +9,7 @@ public class SpinAttack :  BaseAbility
     public float attackDuration = 0.2f;
     public float spinDuration = 0.2f;
 
-
+    private Animator animator;
     private bool isAttacking = false;
     private HashSet<GameObject> hitTargets = new HashSet<GameObject>(); // Track objects hit during an attack
 
@@ -22,6 +22,7 @@ public class SpinAttack :  BaseAbility
 
     private void Start()
     {
+        animator = transform.Find("CatModel").GetComponent<Animator>();
         if (hitbox != null)
         {
             hitbox.enabled = false;
@@ -44,6 +45,15 @@ public class SpinAttack :  BaseAbility
         isAttacking = true;
         hitTargets.Clear(); // Clear previously hit targets
 
+        if (animator != null)
+        {
+            animator.SetTrigger("BaseAttack");
+        }
+        else
+        {
+            Debug.LogError("Animator not found on the player!");
+        }
+
         if (hitbox != null)
         {
             hitbox.enabled = true;  // Enable the hitbox for detecting hits
@@ -52,7 +62,7 @@ public class SpinAttack :  BaseAbility
             Debug.Log("hitbox je nullllllll");
         }
 
-        yield return StartCoroutine(SpinAnimation()); // Perform spin animation
+        //yield return StartCoroutine(SpinAnimation()); // Perform spin animation
         yield return new WaitForSeconds(attackDuration); // Wait for the attack duration
 
         if (hitbox != null)
@@ -63,7 +73,7 @@ public class SpinAttack :  BaseAbility
         isAttacking = false;
     }
 
-    private System.Collections.IEnumerator SpinAnimation()
+    /*private System.Collections.IEnumerator SpinAnimation()
     {
         float elapsedTime = 0f;
         float initialRotation = transform.eulerAngles.y;
@@ -78,7 +88,7 @@ public class SpinAttack :  BaseAbility
         }
 
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, targetRotation, transform.eulerAngles.z);
-    }
+    }*/
 
     private void OnTriggerEnter(Collider other)
     {

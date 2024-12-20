@@ -17,7 +17,7 @@ public class AbilitySelectionManager : MonoBehaviour
         "FireMissile",
         "RapidFire",
         "Shockwave",
-        "SpinAttack"
+        "BasicAttack"
     };
 
     void Start()
@@ -30,10 +30,10 @@ public class AbilitySelectionManager : MonoBehaviour
         PopulateDropdown(player2PrimaryDropdown);
         PopulateDropdown(player2SecondaryDropdown);
         // Defaultne values
-        player1PrimaryDropdown.value = 1;
-        player1SecondaryDropdown.value = 2;
+        player1PrimaryDropdown.value = 2;
+        player1SecondaryDropdown.value = 3;
         player2PrimaryDropdown.value = 1;
-        player2SecondaryDropdown.value = 2; 
+        player2SecondaryDropdown.value = 0; 
     }
 
     void PopulateDropdown(TMP_Dropdown dropdown)

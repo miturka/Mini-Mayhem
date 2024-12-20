@@ -29,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode dodgeKey = KeyCode.LeftShift;
 
+    public Animator animator;
+
     public bool isFrozen = false;
     public bool isRapidFiring = false;
 
@@ -54,6 +56,16 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(rightKey)) movement += isometricRight;
 
         movement = movement.normalized * moveSpeed;
+
+        if (movement != Vector3.zero)
+        {
+            animator.SetBool("isWalking", true); // Spusti chôdzu
+        }
+        else
+        {
+            animator.SetBool("isWalking", false); // Prejdi do idle
+        }
+        
 
         // Use CharacterController's built-in isGrounded property
         if (controller.isGrounded)
@@ -110,6 +122,7 @@ public class PlayerMovement : MonoBehaviour
     public void FreezeMovement()
     {
         isFrozen = true;
+        animator.SetBool("isWalking", false); 
     }
 
     public void UnfreezeMovement()

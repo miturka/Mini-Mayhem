@@ -14,12 +14,20 @@ public class RapidFire : BaseAbility
 
     private bool isFiring = false;
 
+    private Animator animator; 
+
     protected override void Awake()
     {
         base.Awake();
         knockbackForce = 3f;
         speedMultiplier = 3f;
         projectilePrefab = Resources.Load<GameObject>("Prefabs/BasicMissile");
+
+        animator = GetComponentInChildren<Animator>(); // Ak je Animator na dieťati
+        if (animator == null)
+        {
+            Debug.LogError("Animator not found on this object or its children!");
+        }
     }
 
     protected override void Execute()
@@ -50,6 +58,11 @@ public class RapidFire : BaseAbility
         PlayerMovement movement = GetComponent<PlayerMovement>();
         movement.RapidFireEnabled();
 
+        if (animator != null)
+        {
+            animator.SetBool("isRapidFiring", true); // Spustenie animácie
+        }
+
         while (elapsedTime < abilityDuration)
         {
             elapsedTime += fireRate;
@@ -66,6 +79,11 @@ public class RapidFire : BaseAbility
             CreateProjectile(firePoint.position, rightRotation);
 
             yield return new WaitForSeconds(fireRate);
+        }
+
+        if (animator != null)
+        {
+            animator.SetBool("isRapidFiring", false); // Ukončenie animácie
         }
 
         isFiring = false;
