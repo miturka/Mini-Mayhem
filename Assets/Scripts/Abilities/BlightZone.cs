@@ -7,10 +7,10 @@ public class BlightZone : BaseAbility
     public Transform opponent;               // Direct reference to the opponent
 
     public float zoneRadius = 5f;             // Radius of the blight zone effect
-    public float windUpTime = 1f;             // Wind-up time before the zone activates
+    public float windUpTime = 0.3f;             // Wind-up time before the zone activates
     public float zoneDamage = 5f;             // Damage dealt per second to enemies in the zone
     public float slowEffect = 0.5f;           // Slow multiplier (e.g., 0.5 means 50% slower)
-    public float zoneDuration = 5f;           // Duration of the zone effect
+    public float zoneDuration = 3f;           // Duration of the zone effect
 
     public GameObject windUpEffectPrefab;     // Visual effect during the wind-up
     public AudioClip windUpSound;             // Sound effect for the wind-up

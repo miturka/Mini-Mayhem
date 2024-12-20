@@ -8,11 +8,12 @@ public class Player : MonoBehaviour
 {
     protected PlayerMovement movement;
     protected HealthManager health;
+    protected AbilityController cooldown;
 
-    
+
     [Header("Abilities")]
-    [SerializeField] protected BaseAbility primaryAbility;   // Selectable in Inspector
-    [SerializeField] protected BaseAbility secondaryAbility;
+    [SerializeField] public BaseAbility primaryAbility;   // Selectable in Inspector
+    [SerializeField] public BaseAbility secondaryAbility;
 
     public void UsePrimaryAbility() => primaryAbility?.Activate();
     public void UseSecondaryAbility() => secondaryAbility?.Activate();
@@ -22,9 +23,12 @@ public class Player : MonoBehaviour
     public void setSecondaryAbility(BaseAbility ability) => secondaryAbility = ability;
 
 
-    public void Initialize(UnityEngine.UI.Image healthBar, int maxHealth=100, float moveSpeed=5.0f, float jumpHeight=2.0f){
+    public void Initialize(UnityEngine.UI.Image healthBar, UnityEngine.UI.Image primaryCooldownBar, UnityEngine.UI.Image secondaryCooldownBar, int maxHealth=100, float moveSpeed=5.0f, float jumpHeight=2.0f){
         movement = GetComponent<PlayerMovement>();
         health = GetComponent<HealthManager>();
+        cooldown = GetComponent<AbilityController>();
+
+
         if (movement != null)
         {
             movement.moveSpeed = moveSpeed;
@@ -36,10 +40,22 @@ public class Player : MonoBehaviour
             health.maxHealth = maxHealth;
             health.healthBar = healthBar;
             health.InitializeHealth();
+
         }
         else{
             Debug.Log("health neni");
         }
+
+        if(cooldown != null)
+        {
+            cooldown.primaryCooldownBar = primaryCooldownBar;
+            cooldown.secondaryCooldownBar = secondaryCooldownBar;
+        }
+        else{
+            Debug.Log("cooldown neni");
+        }
+
+
 
         Debug.Log("Character initialized.");
     }

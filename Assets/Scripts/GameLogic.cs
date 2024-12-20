@@ -13,6 +13,11 @@ public class GameLogic : MonoBehaviour
     public Image p1HealthBar;
     public Image p2HealthBar;
 
+    public Image p1PrimaryCooldownBar;
+    public Image p1SecondaryCooldownBar;
+    public Image p2PrimaryCooldownBar;
+    public Image p2SecondaryCooldownBar;
+
     public Vector3 player1SpawnPosition = new Vector3(-2, 0, 2);
     public Vector3 player2SpawnPosition = new Vector3(2, 0, -2);
 
@@ -49,6 +54,13 @@ public class GameLogic : MonoBehaviour
     public TMPro.TextMeshProUGUI timerText; // UI text for the timer
     public GameObject gameOverPanel; // UI panel for showing game over
     public TMPro.TextMeshProUGUI gameOverText; // UI text for game over message
+
+
+    public GameObject pausePanel; // UI panel for showing game over
+    private bool isGamePaused = false;
+
+
+    
 
     private void Awake()
     {
@@ -100,8 +112,8 @@ public class GameLogic : MonoBehaviour
         Player player1Script = player1.GetComponent<Player>();
         Player player2Script = player2.GetComponent<Player>();
 
-        player1Script.Initialize(p1HealthBar);
-        player2Script.Initialize(p2HealthBar);
+        player1Script.Initialize(p1HealthBar, p1PrimaryCooldownBar, p1SecondaryCooldownBar);
+        player2Script.Initialize(p2HealthBar, p2PrimaryCooldownBar, p2SecondaryCooldownBar);
 
         player1Script.AddAbility(p1PrimaryName, true);
         player1Script.AddAbility(p1SecondaryName, false);
@@ -143,7 +155,7 @@ public class GameLogic : MonoBehaviour
 
     void Update()
     {
-        if (isGameActive)
+        if (isGameActive && !isGamePaused)
         {
             // Update the game timer
             remainingTime -= Time.deltaTime;
@@ -155,6 +167,33 @@ public class GameLogic : MonoBehaviour
             }
         }
     }
+
+    public void TogglePause()
+    {
+        isGamePaused = !isGamePaused;
+
+        if (isGamePaused)
+        {
+            PauseGame();
+        }
+        else
+        {
+            ResumeGame();
+        }
+    }
+
+    private void PauseGame()
+    {
+        Time.timeScale = 0f; // Stops the game by halting time
+        pausePanel.SetActive(true); // Show the pause menu
+    }
+
+    private void ResumeGame()
+    {
+        Time.timeScale = 1f; // Resumes the game
+        pausePanel.SetActive(false); // Hide the pause menu
+    }
+
 
     public void PlayerDied(GameObject deadPlayer)
     {
@@ -182,6 +221,7 @@ public class GameLogic : MonoBehaviour
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         timerText.text = $"{minutes:00}:{seconds:00}";
     }
+
 
     private IEnumerator ReloadSceneAfterDelay(float delay)
     {

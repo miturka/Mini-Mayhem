@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GroundSlam : BaseAbility
 {
-    public float grappleRange = 3f;           // Range within which the ability can be used
+    public float grappleRange = 7f;           // Range within which the ability can be used
     public float windUpTime = 0.8f;          // Time the ability takes to wind up
     public float slamDamage = 20f;           // Damage dealt by the slam
     public float immobilizeDuration = 0.5f; // Duration for which the enemy is immobilized

@@ -6,62 +6,64 @@ using UnityEngine.UI;
 
 public class AbilitySelectionManager : MonoBehaviour
 {
-    // UI prvky pre výber schopností
-    public TMP_Dropdown player1PrimaryDropdown;
-    public TMP_Dropdown player1SecondaryDropdown;
-    public TMP_Dropdown player2PrimaryDropdown;
-    public TMP_Dropdown player2SecondaryDropdown;
+    
+    public ToggleManager ToggleManager1; // Assign the first ToggleManager in the Inspector
+    public ToggleManager ToggleManager2; // Assign the second ToggleManager in the Inspector
 
-    private List<string> allAbilityNames = new List<string>()
-    {
-        "FireMissile",
-        "RapidFire",
-        "Shockwave",
-        "SpinAttack",
-        "GroundSlam",
-        "DuelBreaker",
-        "ChronoFlurry",
-        "BlightZone"
 
-    };
 
     void Start()
     {
-        Debug.Log($"Populating dropdown with {allAbilityNames.Count} abilities.");
+        // Automatically find all ToggleManager instances in the scene
+        ToggleManager[] toggleManagers = FindObjectsOfType<ToggleManager>();
 
-        // Naplnenie dropdownov schopnosťami
-        PopulateDropdown(player1PrimaryDropdown);
-        PopulateDropdown(player1SecondaryDropdown);
-        PopulateDropdown(player2PrimaryDropdown);
-        PopulateDropdown(player2SecondaryDropdown);
-        player1PrimaryDropdown.value = 0;
-        player1SecondaryDropdown.value = 1;
-        player2PrimaryDropdown.value = 2;
-        player2SecondaryDropdown.value = 3; 
+        if (toggleManagers.Length >= 2)
+        {
+            // Assign the first two found ToggleManagers
+            ToggleManager1 = toggleManagers[0];
+            ToggleManager2 = toggleManagers[1];
+        }
+        else
+        {
+            Debug.LogError("Not enough ToggleManagers found in the scene!");
+        }
     }
 
-    void PopulateDropdown(TMP_Dropdown dropdown)
-    {
-        dropdown.AddOptions(allAbilityNames);
-    }
 
     public void ConfirmSelection()
     {
-        string p1PrimaryName = player1PrimaryDropdown.options[player1PrimaryDropdown.value].text;
-        string p1SecondaryName = player1SecondaryDropdown.options[player1SecondaryDropdown.value].text;
-        string p2PrimaryName = player2PrimaryDropdown.options[player2PrimaryDropdown.value].text;
-        string p2SecondaryName = player2PrimaryDropdown.options[player2SecondaryDropdown.value].text;
+        if (ToggleManager1 != null && ToggleManager2 != null)
+        {
+            // Get selected abilities from both managers
+            List<string> player1Abilities = ToggleManager1.GetSelectedAbilityNames();
+            List<string> player2Abilities = ToggleManager2.GetSelectedAbilityNames();
 
-        // Uloženie názvov do PlayerPrefs
-        PlayerPrefs.SetString("Player1Primary", p1PrimaryName);
-        PlayerPrefs.SetString("Player1Secondary", p1SecondaryName);
-        PlayerPrefs.SetString("Player2Primary", p2PrimaryName);
-        PlayerPrefs.SetString("Player2Secondary", p2SecondaryName);
+            // Ensure there are at least two abilities selected for each player
+            string p1PrimaryName = player1Abilities.Count > 0 ? player1Abilities[0] : "None";
+            string p1SecondaryName = player1Abilities.Count > 1 ? player1Abilities[1] : "None";
 
-        // Uloženie zmien
-        PlayerPrefs.Save();
+            string p2PrimaryName = player2Abilities.Count > 0 ? player2Abilities[0] : "None";
+            string p2SecondaryName = player2Abilities.Count > 1 ? player2Abilities[1] : "None";
 
-        // Prepneme na hernú scénu
-        SceneManager.LoadScene("GameScene");
+            // Save ability names to PlayerPrefs
+            PlayerPrefs.SetString("Player1Primary", p1PrimaryName);
+            PlayerPrefs.SetString("Player1Secondary", p1SecondaryName);
+            PlayerPrefs.SetString("Player2Primary", p2PrimaryName);
+            PlayerPrefs.SetString("Player2Secondary", p2SecondaryName);
+
+            // Save changes
+            PlayerPrefs.Save();
+
+            Debug.Log($"Saved Player 1: Primary = {p1PrimaryName}, Secondary = {p1SecondaryName}");
+            Debug.Log($"Saved Player 2: Primary = {p2PrimaryName}, Secondary = {p2SecondaryName}");
+
+            // Load the game scene
+            SceneManager.LoadScene("GameScene");
+        }
+        else
+        {
+            Debug.LogError("ToggleManager references are missing!");
+        }
+
     }
 }

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public abstract class BaseAbility : MonoBehaviour, IAbility
 {
-    public float cooldown = 3f; // Cooldown duration for the ability
-    private float lastActivationTime = -Mathf.Infinity; // Last time the ability was activated
+    public float cooldown = 5f; // Cooldown duration for the ability
+    public float lastActivationTime = -Mathf.Infinity; // Last time the ability was activated
 
     [Header("Knockback Settings")]
     public float knockbackForce = 10f; // Force of the knockback
