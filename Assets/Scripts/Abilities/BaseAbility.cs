@@ -7,8 +7,6 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
 
     [Header("Knockback Settings")]
     public float knockbackForce = 10f; // Force of the knockback
-    public float knockbackDuration = 0.2f; // Duration of the knockback effect
-
     public float speedMultiplier = 1.5f;
     public Vector3 knockbackDirectionOffset = new Vector3(0, 1, 0); // Default upward offset
 
@@ -32,7 +30,6 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
             Debug.Log($"{GetType().Name} is on cooldown.");
             return;
         }
-
         lastActivationTime = Time.time; // Set the last activation time
         Execute(); // Call the custom logic of the derived ability
     }
@@ -50,19 +47,14 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
 
     protected abstract void Execute();
 
-    internal void ApplyKnockback(CharacterController target, Vector3 knockbackOrigin)
+    internal void ApplyKnockbackLegacy(CharacterController target, Vector3 knockbackOrigin)
     {
         Vector3 knockbackDirection = (target.transform.position - knockbackOrigin).normalized + knockbackDirectionOffset;
-        StartCoroutine(ApplyKnockbackCoroutine(target, knockbackDirection, knockbackForce, knockbackDuration));
+        float knockbackDuration = 0.2f;
+        StartCoroutine(ApplyKnockbackCoroutineLegacy(target, knockbackDirection, knockbackForce, knockbackDuration));
     }
 
-    internal void ApplyKnockbackV2(CharacterController target, Vector3 knockbackOrigin)
-    {
-        Vector3 knockbackDirection = (target.transform.position - knockbackOrigin).normalized + knockbackDirectionOffset;
-        StartCoroutine(ApplyKnockbackCoroutineV2(target, knockbackDirection, knockbackForce));
-    }
-
-    private System.Collections.IEnumerator ApplyKnockbackCoroutine(CharacterController target, Vector3 direction, float force, float duration)
+    private System.Collections.IEnumerator ApplyKnockbackCoroutineLegacy(CharacterController target, Vector3 direction, float force, float duration)
     {
         PlayerMovement targetMovement = target.gameObject.GetComponent<PlayerMovement>();
         targetMovement.FreezeMovement();
@@ -82,6 +74,18 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
         targetMovement.UnfreezeMovement();
     }
 
+    internal void ApplyKnockback(CharacterController target, Vector3 knockbackOrigin)
+    {
+        PlayerMovement p = target.GetComponent<PlayerMovement>();
+        p.ReceiveKnockback(knockbackOrigin, knockbackDirectionOffset, knockbackForce, speedMultiplier);
+    }
+
+    /*internal void ApplyKnockbackV2(CharacterController target, Vector3 knockbackOrigin)
+    {
+        Vector3 knockbackDirection = (target.transform.position - knockbackOrigin).normalized + knockbackDirectionOffset;
+        StartCoroutine(ApplyKnockbackCoroutineV2(target, knockbackDirection, knockbackForce));
+    }
+    
     private System.Collections.IEnumerator ApplyKnockbackCoroutineV2(CharacterController target, Vector3 direction, float force)
     {
         PlayerMovement targetMovement = target.gameObject.GetComponent<PlayerMovement>();
@@ -118,8 +122,5 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
         }
 
         targetMovement.UnfreezeMovement();
-    }
-
-
-
+    }*/
 }

@@ -17,6 +17,15 @@ public class Player : MonoBehaviour
     [SerializeField] protected BaseAbility primaryAbility;   // Selectable in Inspector
     [SerializeField] protected BaseAbility secondaryAbility;
 
+    public Renderer rendererbody;
+    public Renderer rendererlegl;
+    public Renderer rendererlegr;
+    public Renderer rendererglasses;
+
+    public Material blueCatMaterial;
+
+
+
     public void UsePrimaryAbility() => primaryAbility?.Activate();
     public void UseSecondaryAbility() => secondaryAbility?.Activate();
     public void TakeDamage(int amount) => health?.TakeDamage(amount);
@@ -83,6 +92,17 @@ public class Player : MonoBehaviour
         isHitBySpinAttack = true;
         StartCoroutine(WaitOnly());
 
+    }
+
+    public void changeMaterial(){
+        rendererbody.material = blueCatMaterial;
+        rendererlegl.material = blueCatMaterial;
+        rendererlegr.material = blueCatMaterial;
+        rendererglasses.material = blueCatMaterial;
+    }
+
+    public int getHealth(){
+        return health.getCurrentHealth();
     }
 
     IEnumerator WaitOnly()

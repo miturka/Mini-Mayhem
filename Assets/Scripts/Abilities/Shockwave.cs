@@ -15,7 +15,7 @@ public class Shockwave : BaseAbility
 
     public float delayBetweenCircles = 0.5f;
 
-    public float hitYMaxHeight = 0.8f;
+    public float hitYMaxHeight = 2.2f;
 
     protected override void Awake(){
         knockbackForce = 3f;

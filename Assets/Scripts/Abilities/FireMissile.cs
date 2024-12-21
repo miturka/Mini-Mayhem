@@ -8,7 +8,7 @@ public class FireMissile : BaseAbility
     public Transform opponent; // Direct reference to the opponent
 
     public float projectileSpeed = 10f;
-    public int projectileDamage = 20;
+    public int projectileDamage = 15;
     public float projectileLifetime = 5f;
 
     private string missilePrefabPath = "Prefabs/Missile";
