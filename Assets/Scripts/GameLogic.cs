@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameLogic : MonoBehaviour
 {
@@ -59,8 +60,18 @@ public class GameLogic : MonoBehaviour
     public GameObject pausePanel; // UI panel for showing game over
     private bool isGamePaused = false;
 
+    public Dictionary<string, Sprite> abilityImageMap = new Dictionary<string, Sprite>();
 
-    
+
+    // Example sprites (drag them in from the inspector or load them dynamically)
+    public Sprite groundSlam;
+    public Sprite blightZone;
+    public Sprite chronoFlurry;
+    public Sprite duelBreaker;
+    public Sprite fireMissile;
+    public Sprite rapidFire;
+    public Sprite shockwave;
+    public Sprite quickJab;
 
     private void Awake()
     {
@@ -77,6 +88,15 @@ public class GameLogic : MonoBehaviour
 
     void Start()
     {
+        abilityImageMap["GroundSlam"] = groundSlam;
+        abilityImageMap["BlightZone"] = blightZone;
+        abilityImageMap["ChronoFlurry"] = chronoFlurry;
+        abilityImageMap["DuelBreaker"] = duelBreaker;
+        abilityImageMap["FireMissile"] = fireMissile;
+        abilityImageMap["RapidFire"] = rapidFire;
+        abilityImageMap["Shockwave"] = shockwave;
+        abilityImageMap["QuickJab"] = quickJab;
+
         string p1PrimaryName = PlayerPrefs.GetString("Player1Primary", null);
         string p1SecondaryName = PlayerPrefs.GetString("Player1Secondary", null);
         string p2PrimaryName = PlayerPrefs.GetString("Player2Primary", null);
@@ -111,6 +131,12 @@ public class GameLogic : MonoBehaviour
 
         Player player1Script = player1.GetComponent<Player>();
         Player player2Script = player2.GetComponent<Player>();
+
+        p1PrimaryCooldownBar.sprite = abilityImageMap[p1PrimaryName];
+        p1SecondaryCooldownBar.sprite = abilityImageMap[p1SecondaryName];
+        p2PrimaryCooldownBar.sprite = abilityImageMap[p2PrimaryName];
+        p2SecondaryCooldownBar.sprite = abilityImageMap[p2SecondaryName];
+
 
         player1Script.Initialize(p1HealthBar, p1PrimaryCooldownBar, p1SecondaryCooldownBar);
         player2Script.Initialize(p2HealthBar, p2PrimaryCooldownBar, p2SecondaryCooldownBar);

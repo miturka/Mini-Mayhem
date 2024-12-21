@@ -37,8 +37,6 @@ public class AbilityController : MonoBehaviour
     private void UpdateCooldownUI()
     {
         // Primary Ability Cooldown
-        Debug.Log(character.primaryAbility);
-        Debug.Log(primaryCooldownBar);
         if (character.primaryAbility != null && primaryCooldownBar != null)
         {
             UpdateAbilityCooldown(character.primaryAbility, primaryCooldownBar);
