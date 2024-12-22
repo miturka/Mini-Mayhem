@@ -1,11 +1,16 @@
 using UnityEngine;
+using System.Collections;
 
 public class CircleScript : MonoBehaviour
 {
     public float expansionSpeed = 2f; // Speed at which the ring expands
     public float maxRadius = 5f; // Maximum radius of the ring
     public int segments = 100; // Number of segments to draw the ring (smoothness)
-    public float ringWidth = 0.2f; // Thickness of the ring
+    public float ringWidth = 0.2f; // Thickness of the rin
+    public float hitYMaxHeight = 1.0f;
+
+    public float hitCooldown = 0.5f; // Cooldown medzi zásahmi
+    private bool canHit = true;
 
     [HideInInspector]
     public BaseAbility parentAbility; // Reference to the ability that spawned this circle
@@ -15,13 +20,14 @@ public class CircleScript : MonoBehaviour
 
     private PlayerMovement playerMovement;
 
-    public void Initialize(float newSpeed, float newRadius, float newWidth, BaseAbility ability, PlayerMovement movement)
+    public void Initialize(float newSpeed, float newRadius, float newWidth, BaseAbility ability, PlayerMovement movement, float YMax)
     {
         expansionSpeed = newSpeed;
         maxRadius = newRadius ;
         ringWidth = newWidth;
         parentAbility = ability;
         playerMovement = movement;
+        hitYMaxHeight = YMax;
     }
 
     void Start()
@@ -81,16 +87,29 @@ public class CircleScript : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         // Ignore self or unrelated collisions
-        if (other.CompareTag("Player") && other.gameObject != parentAbility.gameObject)
+        if (canHit && other.CompareTag("Player") && other.gameObject != parentAbility.gameObject && other.transform.position.y < hitYMaxHeight)
         {
+            Vector3 position1 = other.transform.position;
+            Vector3 position2 = gameObject.transform.position;
+
+            // Nastav y na rovnakú hodnotu (napr. 0) pre obidva objekty
+            position1.y = 0;
+            position2.y = 0;
+
+            // Vypočítaj vzdialenosť na základe X a Z
+            float distance = Vector3.Distance(position1, position2);
+            float offset = 0.1f;
+            if (distance < currentRadius - offset){
+                return;
+            }
             // Apply damage
             HealthManager health = other.GetComponent<HealthManager>();
-            if (health != null)
+            if (health != null )
             {
-                health.TakeDamage(10);
+                health.TakeDamage(12);
 
                 // Apply knockback if the player is still alive
                 if (health.IsAlive())
@@ -98,10 +117,19 @@ public class CircleScript : MonoBehaviour
                     CharacterController opponentController = other.GetComponent<CharacterController>();
                     if (opponentController != null)
                     {
-                        parentAbility.ApplyKnockback(opponentController, transform.position);
+                        parentAbility.ApplyKnockbackV2(opponentController, transform.position);
                     }
                 }
+                StartCoroutine(HitCooldown());
             }
         }
     }
+
+    private IEnumerator HitCooldown()
+    {
+        canHit = false; // Zablokuj hitovanie
+        yield return new WaitForSeconds(hitCooldown); // Čakaj definovaný čas
+        canHit = true; // Povoli hitovanie znova
+    }
+
 }

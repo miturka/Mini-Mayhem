@@ -66,4 +66,9 @@ public class AbilitySelectionManager : MonoBehaviour
         }
 
     }
+
+    public void OpenSettings()
+    {
+        SceneManager.LoadScene("ControlsScene"); // Prechod na scénu nastavení
+    }
 }

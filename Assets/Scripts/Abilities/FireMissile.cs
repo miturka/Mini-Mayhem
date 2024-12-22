@@ -12,10 +12,18 @@ public class FireMissile : BaseAbility
     public float projectileLifetime = 5f;
 
     private string missilePrefabPath = "Prefabs/Missile";
+    private Animator animator;
+
+    protected override void Awake()
+    {
+        knockbackForce = 3f;
+        speedMultiplier = 3f;
+    }
 
     private void Start()
     {
         opponent = GameLogic.Instance.GetOpponent(gameObject);
+        animator = GetComponentInChildren<Animator>(); 
         if (opponent == null)
         {
             Debug.LogError("Opponent is not assigned.");
@@ -39,6 +47,10 @@ public class FireMissile : BaseAbility
         Vector3 directionToOpponent = (opponent.position - transform.position).normalized; // Direction toward the opponent
         Vector3 spawnPosition = transform.position + directionToOpponent * spawnOffset; // Offset position along the direction
 
+        if (animator != null)
+        {
+            animator.SetTrigger("FireMissile");
+        }
         // Instantiate and initialize the projectile
         GameObject missileGO = Instantiate(missilePrefab, spawnPosition, Quaternion.LookRotation(directionToOpponent));
         Missile missile = missileGO.GetComponent<Missile>();

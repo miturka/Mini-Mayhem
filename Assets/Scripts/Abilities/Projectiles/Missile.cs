@@ -56,7 +56,7 @@ public class Missile : MonoBehaviour
             CharacterController opponentController = other.GetComponent<CharacterController>();
             if (opponentController != null)
             {
-                parentAbility.ApplyKnockback(opponentController, transform.position);
+                parentAbility.ApplyKnockbackV2(opponentController, transform.position);
             }
         }
         }
