@@ -5,7 +5,7 @@ public class GroundSlam : BaseAbility
 {
     public float grappleRange = 7f;           // Range within which the ability can be used
     public float windUpTime = 0.8f;          // Time the ability takes to wind up
-    public float slamDamage = 20f;           // Damage dealt by the slam
+    public float slamDamage = 10f;           // Damage dealt by the slam
     public float immobilizeDuration = 0.5f; // Duration for which the enemy is immobilized
 
     public Transform opponent;               // Direct reference to the opponent

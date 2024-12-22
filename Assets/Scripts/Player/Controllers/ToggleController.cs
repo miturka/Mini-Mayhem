@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class ToggleManager : MonoBehaviour
 {
     public List<Toggle> toggles; // Assign the toggles in the inspector
-    public int maxSelectable = 2; // Maximum number of selectable toggles
+    public int maxSelectable = 3; // Maximum number of selectable toggles
+
+    public Color farbicka;
 
     private Queue<Toggle> selectedToggles = new Queue<Toggle>();
 
@@ -66,7 +68,7 @@ public class ToggleManager : MonoBehaviour
             var backgroundImage = toggle.GetComponentInChildren<Image>();
             if (backgroundImage != null)
             {
-                backgroundImage.color = toggle.isOn ? Color.green : Color.white;
+                backgroundImage.color = toggle.isOn ? farbicka : Color.white;
             }
         }
     }

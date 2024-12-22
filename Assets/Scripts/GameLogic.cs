@@ -17,8 +17,17 @@ public class GameLogic : MonoBehaviour
 
     public Image p1PrimaryCooldownBar;
     public Image p1SecondaryCooldownBar;
+    public Image p1TertiaryCooldownBar;
     public Image p2PrimaryCooldownBar;
     public Image p2SecondaryCooldownBar;
+    public Image p2TertiaryCooldownBar;
+
+    public Image p1PrimaryCooldownImage;
+    public Image p1SecondaryCooldownImage;
+    public Image p1TertiaryCooldownImage;
+    public Image p2PrimaryCooldownImage;
+    public Image p2SecondaryCooldownImage;
+    public Image p2TertiaryCooldownImage;
     
     public TextMeshProUGUI p1Health;
     public TextMeshProUGUI p2Health;
@@ -87,15 +96,17 @@ public class GameLogic : MonoBehaviour
 
         string p1PrimaryName = PlayerPrefs.GetString("Player1Primary", null);
         string p1SecondaryName = PlayerPrefs.GetString("Player1Secondary", null);
+        string p1TertiaryName = PlayerPrefs.GetString("Player1Tertiary", null);
         string p2PrimaryName = PlayerPrefs.GetString("Player2Primary", null);
         string p2SecondaryName = PlayerPrefs.GetString("Player2Secondary", null);
+        string p2TertiaryName = PlayerPrefs.GetString("Player2Tertiary", null);
 
-        StartNewGame(p1PrimaryName, p1SecondaryName, p2PrimaryName, p2SecondaryName);
+        StartNewGame(p1PrimaryName, p1SecondaryName, p1TertiaryName, p2PrimaryName, p2SecondaryName, p2TertiaryName);
 
         pauseMenuPanel.SetActive(false);
     }
 
-    public void StartNewGame(String p1PrimaryName, String p1SecondaryName, String p2PrimaryName, String p2SecondaryName)
+    public void StartNewGame(String p1PrimaryName, String p1SecondaryName, String p1TertiaryName, String p2PrimaryName, String p2SecondaryName, String p2TertiaryName)
     {
         // Reset the game state
         isGameActive = true;
@@ -125,18 +136,25 @@ public class GameLogic : MonoBehaviour
         Player player1Script = player1.GetComponent<Player>();
         Player player2Script = player2.GetComponent<Player>();
 
-        p1PrimaryCooldownBar.sprite = abilityImageMap[p1PrimaryName];
-        p1SecondaryCooldownBar.sprite = abilityImageMap[p1SecondaryName];
-        p2PrimaryCooldownBar.sprite = abilityImageMap[p2PrimaryName];
-        p2SecondaryCooldownBar.sprite = abilityImageMap[p2SecondaryName];
+        player2Script.changeMaterial();
 
-        player1Script.Initialize(p1HealthBar, p1Health, p1PrimaryCooldownBar, p1SecondaryCooldownBar);
-        player2Script.Initialize(p2HealthBar, p2Health, p2PrimaryCooldownBar, p2SecondaryCooldownBar);
+        p1PrimaryCooldownImage.sprite = abilityImageMap[p1PrimaryName];
+        p1SecondaryCooldownImage.sprite = abilityImageMap[p1SecondaryName];
+        p1TertiaryCooldownImage.sprite = abilityImageMap[p1TertiaryName];
+        p2PrimaryCooldownImage.sprite = abilityImageMap[p2PrimaryName];
+        p2SecondaryCooldownImage.sprite = abilityImageMap[p2SecondaryName];
+        p2TertiaryCooldownImage.sprite = abilityImageMap[p2TertiaryName];
 
-        player1Script.AddAbility(p1PrimaryName, true);
-        player1Script.AddAbility(p1SecondaryName, false);
-        player2Script.AddAbility(p2PrimaryName, true);
-        player2Script.AddAbility(p2SecondaryName, false);
+
+        player1Script.Initialize(p1HealthBar, p1Health, p1PrimaryCooldownBar, p1SecondaryCooldownBar, p1TertiaryCooldownBar);
+        player2Script.Initialize(p2HealthBar, p2Health, p2PrimaryCooldownBar, p2SecondaryCooldownBar, p2TertiaryCooldownBar);
+
+        player1Script.AddAbility(p1PrimaryName, 0);
+        player1Script.AddAbility(p1SecondaryName, 1);
+        player1Script.AddAbility(p1TertiaryName, 2);
+        player2Script.AddAbility(p2PrimaryName, 0);
+        player2Script.AddAbility(p2SecondaryName, 1);
+        player2Script.AddAbility(p2TertiaryName, 2);
 
         PlayerMovement player1Movement = player1.GetComponent<PlayerMovement>();
         PlayerMovement player2Movement = player2.GetComponent<PlayerMovement>();
@@ -144,13 +162,14 @@ public class GameLogic : MonoBehaviour
         AbilityController p2AbilityController = player2.GetComponent<AbilityController>();
 
         player1Movement.upKey = GetKeyFromPrefs("0_Move Forward", KeyCode.W);
-        player1Movement.downKey = GetKeyFromPrefs("0_Move Back", KeyCode.A);
-        player1Movement.leftKey = GetKeyFromPrefs("0_Move Left", KeyCode.S);
+        player1Movement.downKey = GetKeyFromPrefs("0_Move Back", KeyCode.S);
+        player1Movement.leftKey = GetKeyFromPrefs("0_Move Left", KeyCode.A);
         player1Movement.rightKey = GetKeyFromPrefs("0_Move Right", KeyCode.D);
         player1Movement.jumpKey = GetKeyFromPrefs("0_Jump", KeyCode.Space);
         player1Movement.dodgeKey = GetKeyFromPrefs("0_Dodge", KeyCode.LeftShift);
-        p1AbilityController.primaryAbilityKey = GetKeyFromPrefs("0_Use Ability 1", KeyCode.Q);
-        p1AbilityController.secondaryAbilityKey = GetKeyFromPrefs("0_Use Ability 2", KeyCode.E);
+        p1AbilityController.primaryAbilityKey = GetKeyFromPrefs("0_Use Ability 1", KeyCode.T);
+        p1AbilityController.secondaryAbilityKey = GetKeyFromPrefs("0_Use Ability 2", KeyCode.Y);
+        p1AbilityController.tertiaryAbilityKey = GetKeyFromPrefs("0_Use Ability 3", KeyCode.U);
 
         player2Movement.upKey = GetKeyFromPrefs("1_Move Forward", KeyCode.Keypad8);
         player2Movement.downKey = GetKeyFromPrefs("1_Move Back", KeyCode.Keypad5);
@@ -159,7 +178,8 @@ public class GameLogic : MonoBehaviour
         player2Movement.jumpKey = GetKeyFromPrefs("1_Jump", KeyCode.Keypad0);
         player2Movement.dodgeKey = GetKeyFromPrefs("1_Dodge", KeyCode.KeypadEnter);
         p2AbilityController.primaryAbilityKey = GetKeyFromPrefs("1_Use Ability 1", KeyCode.Delete);
-        p2AbilityController.secondaryAbilityKey = GetKeyFromPrefs("1_Use Ability 2", KeyCode.Home);
+        p2AbilityController.secondaryAbilityKey = GetKeyFromPrefs("1_Use Ability 2", KeyCode.End);
+        p2AbilityController.tertiaryAbilityKey = GetKeyFromPrefs("1_Use Ability 3", KeyCode.PageDown);
         
 
         if (player1 == null || player2 == null)

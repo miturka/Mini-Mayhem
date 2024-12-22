@@ -4,8 +4,8 @@ using System.Collections;
 public class ChronoFlurry : BaseAbility
 {
     public int numberOfHits = 5;
-    public float hitDamage = 10f;
-    public float finisherDamage = 30f;
+    public float hitDamage = 3f;
+    public float finisherDamage = 12f;
     public float timeBetweenHits = 0.2f;
     public float attackRange = 2f;
 

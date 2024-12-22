@@ -38,7 +38,6 @@ Transform:
   - {fileID: 5439107764664470939}
   - {fileID: 4213542760813796582}
   - {fileID: 2314445227403873328}
-  - {fileID: 2445490973989571414}
   - {fileID: 8883058279196165419}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 135, z: 0}
@@ -109,11 +108,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   primaryAbility: {fileID: 0}
   secondaryAbility: {fileID: 0}
+  tertiaryAbility: {fileID: 0}
   rendererbody: {fileID: 4245555712797416757}
   rendererlegl: {fileID: 3885237347886825021}
   rendererlegr: {fileID: 8394198499585513706}
   rendererglasses: {fileID: 5430159434841681129}
   blueCatMaterial: {fileID: 2100000, guid: 92d23a3122b80c848a171a8b1226006b, type: 2}
+  isAttacking: 0
   isHitBySpinAttack: 0
 --- !u!114 &7812420918927827663
 MonoBehaviour:
@@ -141,8 +142,10 @@ MonoBehaviour:
   jumpKey: 32
   dodgeKey: 304
   animator: {fileID: 3478664896664182546}
+  isBasicKBRunning: 0
   isFrozen: 0
   isRapidFiring: 0
+  isArenaKnockbackActive: 0
 --- !u!114 &4259135992845311136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,37 +175,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   primaryAbilityKey: 101
   secondaryAbilityKey: 113
---- !u!1 &6132906791349605394
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2445490973989571414}
-  m_Layer: 0
-  m_Name: Animator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2445490973989571414
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6132906791349605394}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7138425026539134029}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  tertiaryAbilityKey: 114
+  primaryCooldownBar: {fileID: 0}
+  secondaryCooldownBar: {fileID: 0}
+  tertiaryCooldownBar: {fileID: 0}
 --- !u!1 &6640521723158836893
 GameObject:
   m_ObjectHideFlags: 0

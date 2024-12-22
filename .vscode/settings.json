@@ -47,5 +47,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Mini Mayhem.sln"
+    "dotnet.defaultSolution": "Mini-Mayhem.sln"
 }
