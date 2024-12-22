@@ -19,12 +19,8 @@ public class GroundSlam : BaseAbility
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-
         opponent = GameLogic.Instance.GetOpponent(gameObject);
-
         arenaObject = GameObject.Find("Arena");
-
-
     }
 
     protected override void Execute()
@@ -52,6 +48,7 @@ public class GroundSlam : BaseAbility
         StartCoroutine(GrappleAndSlamCoroutine(opponent));
     }
 
+    // Checks for obstacles between the player and the opponent using a raycast
     private bool IsObstacleInPath()
     {
         Vector3 directionToOpponent = (opponent.position - transform.position).normalized;
@@ -60,7 +57,6 @@ public class GroundSlam : BaseAbility
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToOpponent, out hit, distanceToOpponent))
         {
-            Debug.Log($"Raycast hit something: {hit.collider.name}");
             return true; // Obstacle detected
         }
 
@@ -82,13 +78,11 @@ public class GroundSlam : BaseAbility
         // Check if opponent is still within range
         if (Vector3.Distance(transform.position, opponent.position) > grappleRange)
         {
-            Debug.Log("Opponent dodged the GroundSlam.");
             ResetWindUpEffects();
             yield break;
         }
 
         // Grapple opponent
-        Debug.Log("Opponent grappled!");
         ResetWindUpEffects();
         yield return PullOpponentToPlayer(opponent);
 
@@ -108,6 +102,7 @@ public class GroundSlam : BaseAbility
         }
     }
 
+    // Resets and removes any wind-up effects
     private void ResetWindUpEffects()
     {
         if (currentWindUpEffect != null)
@@ -116,6 +111,7 @@ public class GroundSlam : BaseAbility
         }
     }
 
+    // Gradually pulls the opponent toward the player
     private IEnumerator PullOpponentToPlayer(Transform opponent)
     {
         float pullDuration = 0.5f;
@@ -127,6 +123,8 @@ public class GroundSlam : BaseAbility
         while (elapsedTime < pullDuration)
         {
             elapsedTime += Time.deltaTime;
+
+            // Move the opponent toward the player
             opponent.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / pullDuration);
             yield return null;
         }
@@ -134,14 +132,8 @@ public class GroundSlam : BaseAbility
 
     private void ImmobilizeAndDamageOpponent(Transform opponent)
     {
-        Rigidbody opponentRb = opponent.GetComponent<Rigidbody>();
-        if (opponentRb != null)
-        {
-            opponentRb.isKinematic = true;
-        }
-
-        StartCoroutine(WaitAndRestoreOpponent(opponentRb));
-
+        
+        // Deal damage to the opponent
         HealthManager opponentHealth = opponent.GetComponent<HealthManager>();
         if (opponentHealth != null)
         {
@@ -150,12 +142,4 @@ public class GroundSlam : BaseAbility
         }
     }
 
-    private IEnumerator WaitAndRestoreOpponent(Rigidbody opponentRb)
-    {
-        yield return new WaitForSeconds(immobilizeDuration);
-        if (opponentRb != null)
-        {
-            opponentRb.isKinematic = false;
-        }
-    }
 }

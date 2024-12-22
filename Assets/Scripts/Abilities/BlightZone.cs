@@ -23,8 +23,8 @@ public class BlightZone : BaseAbility
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-
         zoneEffectPrefab = Resources.Load<GameObject>(zoneEffectPrefabPath);
+        animator = GetComponentInChildren<Animator>(); 
 
         // Assign the opponent by finding it in the scene
         opponent = GameLogic.Instance.GetOpponent(gameObject);
@@ -48,16 +48,15 @@ public class BlightZone : BaseAbility
 
     private IEnumerator ActivateBlightZone()
     {
-        Debug.Log("Blight Zone wind-up started!");
 
-        // Step 1: Play wind-up effect and sound
+        // Play wind-up effect and sound
         PlayWindUpEffects();
 
         // Wind-up period before the Blight Zone activates
         yield return new WaitForSeconds(windUpTime);
 
-        // Step 2: Create the Blight Zone at the opponent's position
-        Vector3 zonePosition = transform.position; // Use the opponent's position
+        // Create the Blight Zone at the opponent's position
+        Vector3 zonePosition = transform.position; 
         GameObject zoneInstance = Instantiate(zoneEffectPrefab, zonePosition, Quaternion.identity);
 
         ZoneEffect zoneEffect = zoneInstance.AddComponent<ZoneEffect>();
@@ -76,11 +75,12 @@ public class BlightZone : BaseAbility
         Debug.Log("Blight Zone ended.");
     }
 
+    // Plays visual and audio effects for the wind-up phase
     private void PlayWindUpEffects()
     {
         if (windUpEffectPrefab != null)
         {
-            Instantiate(windUpEffectPrefab, opponent.position, Quaternion.identity, transform); // Effect at opponent's position
+            Instantiate(windUpEffectPrefab, opponent.position, Quaternion.identity, transform); 
         }
         if (audioSource != null && windUpSound != null)
         {
@@ -88,6 +88,7 @@ public class BlightZone : BaseAbility
         }
     }
 
+    // Reset the speed multiplier for all affected players and clears the tracking set
     private void ResetAffectedPlayers()
     {
         foreach (var player in affectedPlayers)
@@ -97,6 +98,7 @@ public class BlightZone : BaseAbility
         affectedPlayers.Clear();
     }
 
+    // Draw a visual representation of the zone's radius in the editor when selected
     private void OnDrawGizmosSelected()
     {
         // Draw the zone radius around the opponent's position in the editor

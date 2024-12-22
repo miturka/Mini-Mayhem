@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class ZoneEffect : MonoBehaviour
 {
-    private float damagePerSecond;
-    private float slowEffect;
-    private float zoneRadius;
-    private HashSet<PlayerMovement> affectedPlayers;
-    private Transform targetOpponent; // Reference to the specific opponent
+    private float damagePerSecond;            // Damage dealt per second to the opponent
+    private float slowEffect;                 // Slow multiplier applied to the opponent
+    private float zoneRadius;                 // Radius of the zone
+    private HashSet<PlayerMovement> affectedPlayers; // Set of players affected by the zone
+    private Transform targetOpponent;         // Reference to the specific opponent affected by the zone
 
     public void InitializeZone(float radius, float damage, float slow, float duration, HashSet<PlayerMovement> players, Transform opponent)
     {
@@ -31,6 +31,7 @@ public class ZoneEffect : MonoBehaviour
             PlayerMovement opponentMovement = other.GetComponent<PlayerMovement>();
             if (opponentMovement != null && !affectedPlayers.Contains(opponentMovement))
             {
+                // Apply the slow effect to the opponent and track them
                 affectedPlayers.Add(opponentMovement);
                 opponentMovement.SetSpeedMultiplier(slowEffect);
                 Debug.Log("Blight Zone applies slow to " + other.name);
@@ -38,9 +39,9 @@ public class ZoneEffect : MonoBehaviour
         }
     }
 
+    // Triggered continuously while an object remains in the zone
     private void OnTriggerStay(Collider other)
     {
-        // Apply damage if the other object matches the passed opponent
         if (other.transform == targetOpponent)
         {
             HealthManager opponentHealth = other.GetComponent<HealthManager>();
@@ -52,6 +53,7 @@ public class ZoneEffect : MonoBehaviour
         }
     }
 
+    // Triggered when an object exits the zone
     private void OnTriggerExit(Collider other)
     {
         // Remove slow if the other object matches the passed opponent
