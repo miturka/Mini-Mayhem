@@ -13,8 +13,6 @@ public class DuelBreaker : BaseAbility
     public GameObject chargeEffectPrefab;   // Visual effect for the charge
     public AudioClip chargeSound;           // Sound effect for the charge
 
-    private AudioSource audioSource;
-
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();

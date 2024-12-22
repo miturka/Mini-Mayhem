@@ -258,6 +258,7 @@ public class GameLogic : MonoBehaviour
     public void ExitToMainMenu()
     {
         Time.timeScale = 1f; // Obnoviť čas (ak by bolo pauznuté)
+        isGameActive = true;
         SceneManager.LoadScene("MainMenuScene"); // Prepnúť na hlavnú menu scénu
     }
 
@@ -324,6 +325,8 @@ public class GameLogic : MonoBehaviour
 
     public void ExitGame()
     {
+        Time.timeScale = 1f; // Obnoviť čas (ak by bolo pauznuté)
+        isGameActive = true;
         SceneManager.LoadScene("MenuSelect");
     }
 

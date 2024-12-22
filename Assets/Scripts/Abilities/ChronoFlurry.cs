@@ -14,8 +14,6 @@ public class ChronoFlurry : BaseAbility
     public AudioClip flurrySound;            // Sound played during rapid hits
     public AudioClip finisherSound;          // Sound played during the finisher attack
 
-    private AudioSource audioSource;         // Audio source component for playing sounds
-
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -69,7 +67,7 @@ public class ChronoFlurry : BaseAbility
         if (health != null)
         {
             health.TakeDamage((int)damage);
-         
+        }
 
         // Apply knockback on finisher
         if (isFinisher)

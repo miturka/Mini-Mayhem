@@ -43,7 +43,7 @@ public class QuickJab :  BaseAbility
 
     protected override void Execute()
     {
-        player.isAttacking = true;  // mark that player is using an ability
+         // mark that player is using an ability
         hitbox = transform.Find("PunchHitbox").GetComponent<CapsuleCollider>();
         Player playerScript = GetComponent<Player>();
         
@@ -51,11 +51,13 @@ public class QuickJab :  BaseAbility
         {
             StartCoroutine(PerformAttack());
         }
+
     }
 
     private System.Collections.IEnumerator PerformAttack()
     {
         isAttacking = true;
+        player.isAttacking = true; 
         hitTargets.Clear(); // Clear previously hit targets
 
         if (animator != null)
@@ -74,7 +76,6 @@ public class QuickJab :  BaseAbility
         else{
             Debug.Log("hitbox je nullllllll");
         }
-
         yield return new WaitForSeconds(attackDuration); // Wait for the attack duration
 
         if (hitbox != null)

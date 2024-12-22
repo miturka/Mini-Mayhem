@@ -64,6 +64,7 @@ public class RapidFire : BaseAbility
     private IEnumerator RapidFireRoutine()
     {
         isFiring = true;
+        player.isAttacking = true;
         float elapsedTime = 0f;
         PlayerMovement movement = GetComponent<PlayerMovement>();
         movement.RapidFireEnabled();
@@ -97,6 +98,7 @@ public class RapidFire : BaseAbility
         }
 
         isFiring = false;
+        player.isAttacking = false;
         movement.RapidFireDisabled();
     }
 

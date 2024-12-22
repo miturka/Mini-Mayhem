@@ -18,7 +18,6 @@ public class BlightZone : BaseAbility
     private string zoneEffectPrefabPath = "Prefabs/BlightZoneArea";
 
     private HashSet<PlayerMovement> affectedPlayers = new HashSet<PlayerMovement>(); // Track affected players
-    private AudioSource audioSource;
 
     private void Start()
     {

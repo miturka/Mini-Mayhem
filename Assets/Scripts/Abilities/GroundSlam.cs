@@ -14,7 +14,6 @@ public class GroundSlam : BaseAbility
     public GameObject windUpEffectPrefab;     // Optional: visual effect for wind-up
     public AudioClip windUpSound;             // Optional: sound effect for wind-up
     private GameObject currentWindUpEffect;   // Store the effect instance to destroy it later
-    private AudioSource audioSource;
 
     private void Start()
     {
