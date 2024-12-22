@@ -21,7 +21,7 @@ public class MainMenu : MonoBehaviour
 
     public void OpenSettings()
     {
-        SceneManager.LoadScene("SettingsScene");
+        SceneManager.LoadScene("ControlsScene");
     }
 
     public void QuitGame()
