@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Manage health of a player
 public class HealthManager : MonoBehaviour
 {
     public int maxHealth = 100;
@@ -31,6 +32,7 @@ public class HealthManager : MonoBehaviour
     private void Die()
     {
         Debug.Log(gameObject.name + " has been defeated.");
+        //send info about player died to gamelogic
         GameLogic gameLogic = FindObjectOfType<GameLogic>();
         if (gameLogic != null)
         {

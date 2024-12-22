@@ -11,8 +11,8 @@ public class AbilityController : MonoBehaviour
 
 
     [Header("Cooldown UI")]
-    public Image primaryCooldownBar;   // Assign in Inspector
-    public Image secondaryCooldownBar; // Assign in Inspector
+    public Image primaryCooldownBar;  
+    public Image secondaryCooldownBar; 
     public Image tertiaryCooldownBar;
 
     void Start()
@@ -22,6 +22,7 @@ public class AbilityController : MonoBehaviour
 
     void Update()
     {
+        // control abilities of a player
         if (Input.GetKeyDown(primaryAbilityKey))
         {
             character.UsePrimaryAbility();
@@ -70,12 +71,12 @@ public class AbilityController : MonoBehaviour
             float elapsedTime = Time.time - ability.lastActivationTime;
             float cooldownPercentage = Mathf.Clamp01(elapsedTime / ability.GetCooldown());
 
-            // Update the UI bar (inverted because we are filling it)
+            // Update the UI bar 
             cooldownBar.fillAmount = 1 - cooldownPercentage;
         }
         else
         {
-            // Ability is ready, so set the bar to full
+            // Ability is ready
             cooldownBar.fillAmount = 0;
         }
     }

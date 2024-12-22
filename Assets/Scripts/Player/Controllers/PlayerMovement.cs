@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+//Manages movement of a player
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
@@ -34,12 +35,11 @@ public class PlayerMovement : MonoBehaviour
 
     private Coroutine currentKnockbackCoroutine;
 
-    public bool isBasicKBRunning;
+    public bool isBasicKBRunning;   // is knockback from ability being applied
 
     public bool isFrozen = false;
     public bool isRapidFiring = false;
-
-    public bool isArenaKnockbackActive = false;
+    public bool isArenaKnockbackActive = false; // is knockback from arena being applied
 
     void Start()
     {
@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        // Get movement directions
         if (Input.GetKey(upKey)) movement += isometricForward;
         if (Input.GetKey(downKey)) movement -= isometricForward;
         if (Input.GetKey(leftKey)) movement -= isometricRight;
@@ -69,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         // Apply speed multiplier
         movement = movement.normalized * (currentSpeed * speedMultiplier);
 
+        // toggle animations
         if (movement != Vector3.zero)
         {
             animator.SetBool("isWalking", true); // Spusti chôdzu
@@ -79,7 +81,6 @@ public class PlayerMovement : MonoBehaviour
         }
         
 
-        // Use CharacterController's built-in isGrounded property
         if (controller.isGrounded)
         {
             velocity.y = -2f; // Small downward force to keep player grounded
@@ -179,30 +180,32 @@ public class PlayerMovement : MonoBehaviour
         if (isArenaKnockbackActive)
         {
             Debug.Log("Arena knockback already active.");
-            return; // Nepovoľ ďalší arenový knockback
+            return; // dont allow other knockback when arena is giving knockback
         }
         Vector3 knockbackDirection = (transform.position - knockbackOrigin).normalized + knockbackDirectionOffset;
         if (currentKnockbackCoroutine != null)
         {
-            StopCoroutine(currentKnockbackCoroutine); // Zastav aktuálny knockback
+            StopCoroutine(currentKnockbackCoroutine); // stop current knockback
         }
+        // apply new knockback
         currentKnockbackCoroutine = StartCoroutine(ApplyKnockbackCoroutine(knockbackDirection, knockbackForce, speedMultiplier));
     }
 
     internal void ReceiveArenaKnockback(Vector3 knockbackDirectionOffset, float knockbackForce, float speedMultiplier)
     {
-        Debug.Log("ARENOVYY");
+        // apply knockback when trying to leave the arena
         Vector3 knockbackDirection = (Vector3.zero - transform.position).normalized + knockbackDirectionOffset;
         isArenaKnockbackActive = true;
         if (currentKnockbackCoroutine != null)
         {
-            StopCoroutine(currentKnockbackCoroutine); // Zastav aktuálny knockback
-            Debug.Log("zastavujem knokbak z idk ani");
+            StopCoroutine(currentKnockbackCoroutine); // stop current knockback
+            Debug.Log("zastavujem");
 
         }
         else{
-            Debug.Log("iny knok nebezi");
+            Debug.Log("iny knockback nebezi");
         }
+        // apply arena knockback
         currentKnockbackCoroutine = StartCoroutine(ApplyArenaKnockbackCoroutine( knockbackDirection, knockbackForce, speedMultiplier));
     }
 
@@ -211,11 +214,12 @@ public class PlayerMovement : MonoBehaviour
         
         FreezeMovement();
         isBasicKBRunning = true; 
-        // Zvýšenie rýchlosti pomocou multiplier
+
+        // calculate velocities
         Vector3 horizontalVelocity = new Vector3(direction.x, 0, direction.z).normalized * force * speedMultiplier;
         float verticalVelocity = Mathf.Max(0, direction.y) * force * speedMultiplier;
 
-        float knockbackTimer = 0.2f; // Čas, kedy je hráč "nútene vo vzduchu"
+        float knockbackTimer = 0.2f; 
         bool forceAirborne = true;
 
         while (forceAirborne || !controller.isGrounded)
@@ -229,13 +233,11 @@ public class PlayerMovement : MonoBehaviour
                 forceAirborne = false;
             }
 
-            // Rýchlejšie pridávanie gravitácie (zrýchlený pohyb dole)
+            // recalculate velocity
             verticalVelocity += Physics.gravity.y * Time.deltaTime * speedMultiplier;
-
-            // Kombinácia zrýchlenej horizontálnej a vertikálnej zložky
             Vector3 velocity = horizontalVelocity + Vector3.up * verticalVelocity;
 
-            // Rýchlejší pohyb
+            //apply knockback movement
             controller.Move(velocity * Time.deltaTime);
 
             yield return null;
@@ -250,11 +252,11 @@ public class PlayerMovement : MonoBehaviour
     {
         FreezeMovement();
 
-        // Zvýšenie rýchlosti pomocou multiplier
+        // calculate velocities
         Vector3 horizontalVelocity = new Vector3(direction.x, 0, direction.z).normalized * force * speedMultiplier;
         float verticalVelocity = Mathf.Max(0, direction.y) * force * speedMultiplier;
 
-        float knockbackTimer = 0.2f; // Čas, kedy je hráč "nútene vo vzduchu"
+        float knockbackTimer = 0.2f; 
         bool forceAirborne = true;
 
         while (forceAirborne || !controller.isGrounded)
@@ -268,13 +270,11 @@ public class PlayerMovement : MonoBehaviour
                 forceAirborne = false;
             }
 
-            // Rýchlejšie pridávanie gravitácie (zrýchlený pohyb dole)
+            // recalculate velocity
             verticalVelocity += Physics.gravity.y * Time.deltaTime * speedMultiplier;
-
-            // Kombinácia zrýchlenej horizontálnej a vertikálnej zložky
             Vector3 velocity = horizontalVelocity + Vector3.up * verticalVelocity;
 
-            // Rýchlejší pohyb
+            // apply arena knockback movement
             controller.Move(velocity * Time.deltaTime);
 
             yield return null;

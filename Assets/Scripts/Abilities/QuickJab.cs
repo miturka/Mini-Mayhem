@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Basic quick jab ability attack
 public class QuickJab :  BaseAbility
 {
     [Header("Abillity Settings")]
     public Collider hitbox;
     public int attackDamage = 2;
     public float attackDuration = 0.2f;
-    public float spinDuration = 0.2f;
-
     private bool isAttacking = false;
     private HashSet<GameObject> hitTargets = new HashSet<GameObject>(); // Track objects hit during an attack
 
@@ -27,13 +26,14 @@ public class QuickJab :  BaseAbility
             hitbox.enabled = false;
         }
 
+        // add audio component
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         AudioClip abilitySound = Resources.Load<AudioClip>("Sounds/basicattack2");
 
         if (abilitySound != null)
         {
-            audioSource.clip = abilitySound; // Priradenie zvuku
+            audioSource.clip = abilitySound; 
         }
         else
         {
@@ -43,7 +43,7 @@ public class QuickJab :  BaseAbility
 
     protected override void Execute()
     {
-        player.isAttacking = true;
+        player.isAttacking = true;  // mark that player is using an ability
         hitbox = transform.Find("PunchHitbox").GetComponent<CapsuleCollider>();
         Player playerScript = GetComponent<Player>();
         
@@ -60,7 +60,7 @@ public class QuickJab :  BaseAbility
 
         if (animator != null)
         {
-            animator.SetTrigger("BaseAttack");
+            animator.SetTrigger("BaseAttack");  //trigger animation
         }
         else
         {
@@ -75,7 +75,6 @@ public class QuickJab :  BaseAbility
             Debug.Log("hitbox je nullllllll");
         }
 
-        //yield return StartCoroutine(SpinAnimation()); // Perform spin animation
         yield return new WaitForSeconds(attackDuration); // Wait for the attack duration
 
         if (hitbox != null)
@@ -84,7 +83,7 @@ public class QuickJab :  BaseAbility
         }
 
         isAttacking = false;
-        player.isAttacking = false;
+        player.isAttacking = false; // mark that player stopped using an ability
     }
 
     /*private System.Collections.IEnumerator SpinAnimation()

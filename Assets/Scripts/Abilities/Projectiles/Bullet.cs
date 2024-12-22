@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Bullet Script for RapidFire ability
 public class Bullet : MonoBehaviour
 {
     private float speed;
@@ -12,7 +13,7 @@ public class Bullet : MonoBehaviour
         damage = newDamage;
         direction = newDirection;
         parentAbility = ability;
-        Destroy(gameObject, 5f); // Destroy after 5 seconds to prevent clutter
+        Destroy(gameObject, 5f); // Destroy after 5 seconds 
     }
 
     private void Update()
@@ -24,12 +25,13 @@ public class Bullet : MonoBehaviour
     {
         if ((other.CompareTag("Player") && other.transform == parentAbility.transform) || other.CompareTag("Bullet")) 
         {
-            return; // Ignore collisions with the firing player
+            return; // Ignore collisions with the firing player or other bullet
         }
 
         if (other.CompareTag("ArenaArea")){
-            return;
+            return; // Ignore area of the arena
         }
+
         // Apply damage if the projectile hits the target
         HealthManager health = other.GetComponent<HealthManager>();
         if (health != null)
@@ -43,10 +45,6 @@ public class Bullet : MonoBehaviour
             }
         }
         }
-
         Destroy(gameObject);
-
-        // Optionally, trigger an explosion or visual effect here
-        //Debug.Log("Missile hit: " + other.name);
     }
 }

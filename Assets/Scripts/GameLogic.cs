@@ -53,14 +53,11 @@ public class GameLogic : MonoBehaviour
 
     public GameObject pauseMenuPanel; 
 
-
     public GameObject pausePanel; // UI panel for showing game over
     private bool isGamePaused = false;
 
     public Dictionary<string, Sprite> abilityImageMap = new Dictionary<string, Sprite>();
 
-
-    // Example sprites (drag them in from the inspector or load them dynamically)
     public Sprite groundSlam;
     public Sprite blightZone;
     public Sprite chronoFlurry;
@@ -84,7 +81,8 @@ public class GameLogic : MonoBehaviour
     }
 
     void Start()
-    {
+    {   
+        // Get ability names from menuselect screen
         abilityImageMap["GroundSlam"] = groundSlam;
         abilityImageMap["BlightZone"] = blightZone;
         abilityImageMap["ChronoFlurry"] = chronoFlurry;
@@ -101,6 +99,7 @@ public class GameLogic : MonoBehaviour
         string p2SecondaryName = PlayerPrefs.GetString("Player2Secondary", null);
         string p2TertiaryName = PlayerPrefs.GetString("Player2Tertiary", null);
 
+        // start new game with the abilities
         StartNewGame(p1PrimaryName, p1SecondaryName, p1TertiaryName, p2PrimaryName, p2SecondaryName, p2TertiaryName);
 
         pauseMenuPanel.SetActive(false);
@@ -111,8 +110,6 @@ public class GameLogic : MonoBehaviour
         // Reset the game state
         isGameActive = true;
         remainingTime = gameDuration;
-
-        // Commented out spawning logic; assume players are already in the scene
         
         GameObject sceneContent = GameObject.Find("SceneContent");
 
@@ -129,7 +126,7 @@ public class GameLogic : MonoBehaviour
         followCamera.player1 = player1.transform;
         followCamera.player2 = player2.transform;
 
-        // Nastavíme ich ako child objektov SceneContent
+        // set players as child objects of SceneContent
         player1.transform.SetParent(sceneContent.transform);
         player2.transform.SetParent(sceneContent.transform);
 
@@ -327,7 +324,7 @@ public class GameLogic : MonoBehaviour
 
     public void ExitGame()
     {
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("MenuSelect");
     }
 
     KeyCode GetKeyFromPrefs(string keyName, KeyCode defaultKey)

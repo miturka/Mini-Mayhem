@@ -11,20 +11,20 @@ public class Player : MonoBehaviour
     protected AbilityController cooldown;
     
     [Header("Abilities")]
-    [SerializeField] public BaseAbility primaryAbility;   // Selectable in Inspector
+    [SerializeField] public BaseAbility primaryAbility;   
     [SerializeField] public BaseAbility secondaryAbility;
     [SerializeField] public BaseAbility tertiaryAbility;
 
+    // renderers for changing skin
     public Renderer rendererbody;
     public Renderer rendererlegl;
     public Renderer rendererlegr;
     public Renderer rendererglasses;
-
     public Material blueCatMaterial;
 
-    public bool isAttacking = false;
+    public bool isAttacking = false; // bool for blocking other abilities when one is active
 
-
+    public bool isHitBySpinAttack = false;
 
     public void UsePrimaryAbility()
     {
@@ -54,10 +54,7 @@ public class Player : MonoBehaviour
     public void setPrimaryAbility(BaseAbility ability) => primaryAbility = ability;
     public void setSecondaryAbility(BaseAbility ability) => secondaryAbility = ability;
     public void setTertiaryAbility(BaseAbility ability) => secondaryAbility = ability;
-
-    public bool isHitBySpinAttack = false;
-
-    
+ 
     public void Initialize(UnityEngine.UI.Image healthBar, TextMeshProUGUI healthNum, UnityEngine.UI.Image primaryCooldownBar, UnityEngine.UI.Image secondaryCooldownBar, UnityEngine.UI.Image tertiaryCooldownBar, int maxHealth=100, float moveSpeed=5.0f, float jumpHeight=2.0f){
         movement = GetComponent<PlayerMovement>();
         health = GetComponent<HealthManager>();
@@ -92,14 +89,13 @@ public class Player : MonoBehaviour
             Debug.Log("cooldown neni");
         }
 
-
-
         Debug.Log("Character initialized.");
     }
 
+    // Add ability by string name
     public void AddAbility(string abilityName, int num)
     {
-        Type abilityType = Type.GetType(abilityName); // Nájde typ podľa názvu
+        Type abilityType = Type.GetType(abilityName); // find type by name
 
         if (abilityType == null)
         {
@@ -107,13 +103,13 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (!typeof(BaseAbility).IsAssignableFrom(abilityType)) // Skontroluje, či trieda dedí z BaseAbility
+        if (!typeof(BaseAbility).IsAssignableFrom(abilityType)) // check if its baseability
         {
             Debug.LogError($"{abilityName} is not a valid ability.");
             return;
         }
 
-        // Dynamické pridanie komponentu
+        // Add component
         BaseAbility ability = (BaseAbility)gameObject.AddComponent(abilityType);
 
         if (num == 0)

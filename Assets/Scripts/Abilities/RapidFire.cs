@@ -1,20 +1,17 @@
 using System.Collections;
 using UnityEngine;
 
+// RapidFire ability fires rapidly mutiple projectiles 
 public class RapidFire : BaseAbility
 {
     [Header("Rapid Fire Settings")]
-    public GameObject projectilePrefab;    // The projectile to shoot
+    public GameObject projectilePrefab;    // Bullet projectile
     public float fireRate = 0.2f;          // Time between each shot
     public float abilityDuration = 3f;     // How long the rapid fire lasts
-    public float projectileSpeed = 10f;    // Speed of the pcrojectile
+    public float projectileSpeed = 10f;    // Speed of the projectile
     public int projectileDamage = 4;       // Damage of each projectile
-
-    public float rotationSpeed = 200f; 
-
     private bool isFiring = false;
 
-    
 
     protected override void Awake()
     {
@@ -23,7 +20,6 @@ public class RapidFire : BaseAbility
         speedMultiplier = 3f;
         projectilePrefab = Resources.Load<GameObject>("Prefabs/Bullet");
 
-         // Ak je Animator na dieťati
         if (animator == null)
         {
             Debug.LogError("Animator not found on this object or its children!");
@@ -32,7 +28,6 @@ public class RapidFire : BaseAbility
 
     protected override void Execute()
     {
-
         if (firePoint == null)
         {
             Debug.LogError("FirePoint is not set. Please assign it in the Inspector or initialize it in the script.");
@@ -49,6 +44,7 @@ public class RapidFire : BaseAbility
         {
             Debug.LogError("FirePoint is not set. Please assign it in the Inspector or initialize it in the script.");
         }
+        // add sound effect
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.volume = 0.4f;
@@ -56,7 +52,7 @@ public class RapidFire : BaseAbility
 
         if (abilitySound != null)
         {
-            audioSource.clip = abilitySound; // Priradenie zvuku
+            audioSource.clip = abilitySound;
         }
         else
         {
@@ -64,6 +60,7 @@ public class RapidFire : BaseAbility
         }
     }
 
+    // Start rapid firing
     private IEnumerator RapidFireRoutine()
     {
         isFiring = true;
@@ -73,22 +70,21 @@ public class RapidFire : BaseAbility
 
         if (animator != null)
         {
-            animator.SetBool("isRapidFiring", true); // Spustenie animácie
+            animator.SetBool("isRapidFiring", true); // start animation
         }
 
+        // fire three projectiles repeatedly
         while (elapsedTime < abilityDuration)
         {
             elapsedTime += fireRate;
             audioSource.Play();
 
-            // Stredný projektil (hlavný smer)
+
             CreateProjectile(firePoint.position, firePoint.rotation);
 
-            // Ľavý projektil (mierne doľava)
             Quaternion leftRotation = Quaternion.Euler(firePoint.eulerAngles + new Vector3(0, -10, 0));
             CreateProjectile(firePoint.position, leftRotation);
 
-            // Pravý projektil (mierne doprava)
             Quaternion rightRotation = Quaternion.Euler(firePoint.eulerAngles + new Vector3(0, 10, 0));
             CreateProjectile(firePoint.position, rightRotation);
 
@@ -97,7 +93,7 @@ public class RapidFire : BaseAbility
 
         if (animator != null)
         {
-            animator.SetBool("isRapidFiring", false); // Ukončenie animácie
+            animator.SetBool("isRapidFiring", false); // stop animation
         }
 
         isFiring = false;

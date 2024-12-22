@@ -75,6 +75,12 @@ public class AbilitySelectionManager : MonoBehaviour
             Debug.Log($"Saved Player 2: Primary = {p2PrimaryName}, Secondary = {p2SecondaryName}");
             
 
+            if (p1PrimaryName == "None" || p1SecondaryName == "None" || p1TertiaryName == "None" ||
+                p2PrimaryName == "None" || p2SecondaryName == "None" || p2TertiaryName == "None")
+            {
+                Debug.Log("Both players must select all abilities before starting the game.");
+                return; // Prevent loading the scene
+            }
             // Load the game scene
             SceneManager.LoadScene("GameScene");
         }

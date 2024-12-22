@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Player fires missile auto-aimed to the opponent
 public class FireMissile : BaseAbility
 {
     [Header("Abillity Settings")]
@@ -26,13 +27,14 @@ public class FireMissile : BaseAbility
         opponent = GameLogic.Instance.GetOpponent(gameObject);
         animator = GetComponentInChildren<Animator>(); 
 
+        // add audio component
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
-        AudioClip abilitySound = Resources.Load<AudioClip>("Sounds/missile");
+        AudioClip abilitySound = Resources.Load<AudioClip>("Sounds/missile"); // assign missile sound
 
         if (abilitySound != null)
         {
-            audioSource.clip = abilitySound; // Priradenie zvuku
+            audioSource.clip = abilitySound; 
         }
         else
         {
@@ -47,7 +49,7 @@ public class FireMissile : BaseAbility
 
     protected override void Execute()
     {
-        player.isAttacking = true;
+        player.isAttacking = true;  // mark that player is using an ability
         missilePrefab = Resources.Load<GameObject>(missilePrefabPath);
         if (missilePrefab == null)
         {
@@ -66,6 +68,7 @@ public class FireMissile : BaseAbility
         {
             animator.SetTrigger("FireMissile");
         }
+
         // Instantiate and initialize the projectile
         PlaySegment(0.5f, 0.42f);
         GameObject missileGO = Instantiate(missilePrefab, spawnPosition, Quaternion.LookRotation(directionToOpponent));
@@ -77,7 +80,7 @@ public class FireMissile : BaseAbility
         }
 
         Debug.Log("Projectile launched at opponent: " + opponent.name);
-        player.isAttacking = false;
+        player.isAttacking = false; // mark that player stopped using an ability
     }
 
     

@@ -1,14 +1,14 @@
 using UnityEngine;
 
+// Missile script for FireMissile ability
 public class Missile : MonoBehaviour
 {
     public float speed; // Speed of the projectile
     public float rotationSpeed = 200f; // Rotation speed for homing
-    public int damage; // Damage dealt by the projectile
+    public int damage; 
     public float lifetime; // Time before the projectile self-destructs
 
     private AudioSource audioSource;
-
     private Transform target; // Target to home in on
     private BaseAbility parentAbility;
 
@@ -20,7 +20,7 @@ public class Missile : MonoBehaviour
         lifetime = newLifeTime;
         parentAbility = ability;
 
-        Destroy(gameObject, lifetime);
+        Destroy(gameObject, lifetime);  // Destroy rocket after lifetime
     }
 
     private void Update()
@@ -43,14 +43,13 @@ public class Missile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Nieco hitla raketa");
         if (other.CompareTag("Player") && other.transform != target)
         {
             return; // Ignore collisions with the firing player
         }
 
         if (other.CompareTag("ArenaArea")){
-            return;
+            return; // Ignore arena area
         }
 
         // Apply damage if the projectile hits the target
@@ -66,11 +65,11 @@ public class Missile : MonoBehaviour
             }
         }
         }
-        parentAbility.PlaySegment(1.0f, 2.3f);
-        // Destroy the projectile on impact
-        Debug.Log("Missile hit: " + other.name + " A PREHRAVAM ZVKU");
+        parentAbility.PlaySegment(1.0f, 2.3f);  // play explosion sound
 
-        
+        // Destroy the projectile on impact
+        Debug.Log("Missile hit: " + other.name);
+
         Destroy(gameObject);        
     }
 }

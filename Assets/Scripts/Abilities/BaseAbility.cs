@@ -1,21 +1,19 @@
 using UnityEngine;
 
+// BaseAbility abstract class, abilities are derived from this
 public abstract class BaseAbility : MonoBehaviour, IAbility
 {
     public float cooldown = 3f; // Cooldown duration for the ability
     public float lastActivationTime = -Mathf.Infinity; // Last time the ability was activated
-
     public Player player;
-
     public AudioSource audioSource;
 
     [Header("Knockback Settings")]
     public float knockbackForce = 10f; // Force of the knockback
-    public float speedMultiplier = 1.5f;
+    public float speedMultiplier = 1.5f;    // Speed multiplier of the knockback
     public Vector3 knockbackDirectionOffset = new Vector3(0, 1, 0); // Default upward offset
     protected Animator animator; 
-
-    protected Transform firePoint;
+    protected Transform firePoint;  // firepoint for RapidFire
 
     protected virtual void Awake()
     {
@@ -33,12 +31,12 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
         {
             Debug.LogError($"Player not found on {gameObject.name}. Make sure it exists as a componotenetnetnentetntn.");
         }
+
         animator = GetComponentInChildren<Animator>();
     }
 
     public virtual void Activate()
     {
-
         if (IsOnCooldown())
         {
             Debug.Log($"{GetType().Name} is on cooldown.");
@@ -48,7 +46,6 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
         Execute(); // Call the custom logic of the derived ability
     }
 
-    // Cooldown check
     public bool IsOnCooldown()
     {
         return Time.time < lastActivationTime + cooldown;
@@ -61,6 +58,7 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
 
     protected abstract void Execute();
 
+    // Old knockback, unused
     internal void ApplyKnockbackLegacy(CharacterController target, Vector3 knockbackOrigin)
     {
         Vector3 knockbackDirection = (target.transform.position - knockbackOrigin).normalized + knockbackDirectionOffset;
@@ -88,12 +86,14 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
         targetMovement.UnfreezeMovement();
     }
 
+    // Applying knockback to the player that gets hit
     internal void ApplyKnockback(CharacterController target, Vector3 knockbackOrigin)
     {
         PlayerMovement p = target.GetComponent<PlayerMovement>();
         p.ReceiveKnockback(knockbackOrigin, knockbackDirectionOffset, knockbackForce, speedMultiplier);
     }
 
+    // Play segment of audioclip
     public void PlaySegment(float startTime, float duration)
     {
         if (audioSource.clip == null)
@@ -114,11 +114,8 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
             return;
         }
 
-        // Nastavenie začiatku prehrávania
         audioSource.time = startTime;
         audioSource.Play();
-
-        // Naplánovanie zastavenia zvuku po trvaní segmentu
         Invoke(nameof(StopAudio), duration);
     }
 
