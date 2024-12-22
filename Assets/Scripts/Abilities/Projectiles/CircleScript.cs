@@ -8,6 +8,7 @@ public class CircleScript : MonoBehaviour
     public int segments = 100; // Number of segments to draw the ring (smoothness)
     public float ringWidth = 0.2f; // Thickness of the rin
     public float hitYMaxHeight = 2.2f;
+    public int damage = 10;
 
     public float hitCooldown = 0.5f; // Cooldown medzi zásahmi
     private bool canHit = true;
@@ -109,7 +110,7 @@ public class CircleScript : MonoBehaviour
             HealthManager health = other.GetComponent<HealthManager>();
             if (health != null )
             {
-                health.TakeDamage(12);
+                health.TakeDamage(damage);
 
                 // Apply knockback if the player is still alive
                 if (health.IsAlive())

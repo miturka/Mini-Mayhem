@@ -20,7 +20,8 @@ public class SettingsManager : MonoBehaviour
         "Jump",
         "Dodge",
         "Use Ability 1",
-        "Use Ability 2"
+        "Use Ability 2",
+        "Use Ability 3"
     };
 
     private string waitingForKeyFunction = null;
@@ -103,8 +104,9 @@ public class SettingsManager : MonoBehaviour
             { "Move Right", KeyCode.D },
             { "Jump", KeyCode.Space },
             { "Dodge", KeyCode.LeftShift },
-            { "Use Ability 1", KeyCode.Q },
-            { "Use Ability 2", KeyCode.E }
+            { "Use Ability 1", KeyCode.Z },
+            { "Use Ability 2", KeyCode.U },
+            { "Use Ability 3", KeyCode.I }
         };
 
         Dictionary<string, KeyCode> defaultKeysPlayer2 = new Dictionary<string, KeyCode>
@@ -116,7 +118,8 @@ public class SettingsManager : MonoBehaviour
             { "Jump", KeyCode.Keypad0 },
             { "Dodge", KeyCode.KeypadEnter},
             { "Use Ability 1", KeyCode.Delete },
-            { "Use Ability 2", KeyCode.Home }
+            { "Use Ability 2", KeyCode.End },
+            { "Use Ability 3", KeyCode.PageDown }
         };
 
         return (playerIndex == 0 ? defaultKeysPlayer1 : defaultKeysPlayer2)[function].ToString();

@@ -22,6 +22,18 @@ public class AbilitySelectionManager : MonoBehaviour
             // Assign the first two found ToggleManagers
             ToggleManager1 = toggleManagers[0];
             ToggleManager2 = toggleManagers[1];
+
+            float r = 250 / 255f; // Červená: 1.0
+            float g = 180 / 255f; // Zelená: 0.5
+            float b = 0 / 255f;  // Modrá: 0.25
+            Color color = new Color(r, g, b);
+            ToggleManager1.farbicka = color;
+            
+            r = 76 / 255f; // Červená: 1.0
+            g = 192 / 255f; // Zelená: 0.5
+            b = 245 / 255f;  // Modrá: 0.25
+            Color color2 = new Color(r, g, b);
+            ToggleManager2.farbicka = color2;
         }
         else
         {
@@ -41,21 +53,27 @@ public class AbilitySelectionManager : MonoBehaviour
             // Ensure there are at least two abilities selected for each player
             string p1PrimaryName = player1Abilities.Count > 0 ? player1Abilities[0] : "None";
             string p1SecondaryName = player1Abilities.Count > 1 ? player1Abilities[1] : "None";
+            string p1TertiaryName = player1Abilities.Count > 1 ? player1Abilities[2] : "None";
 
             string p2PrimaryName = player2Abilities.Count > 0 ? player2Abilities[0] : "None";
             string p2SecondaryName = player2Abilities.Count > 1 ? player2Abilities[1] : "None";
+            string p2TertiaryName = player2Abilities.Count > 1 ? player2Abilities[2] : "None";
 
             // Save ability names to PlayerPrefs
             PlayerPrefs.SetString("Player1Primary", p1PrimaryName);
             PlayerPrefs.SetString("Player1Secondary", p1SecondaryName);
+            PlayerPrefs.SetString("Player1Tertiary", p1TertiaryName);
+
             PlayerPrefs.SetString("Player2Primary", p2PrimaryName);
-            PlayerPrefs.SetString("Player2Secondary", p2SecondaryName);
+            PlayerPrefs.SetString("Player2Secondary", p2SecondaryName); 
+            PlayerPrefs.SetString("Player2Tertiary", p2TertiaryName);
 
             // Save changes
             PlayerPrefs.Save();
 
             Debug.Log($"Saved Player 1: Primary = {p1PrimaryName}, Secondary = {p1SecondaryName}");
             Debug.Log($"Saved Player 2: Primary = {p2PrimaryName}, Secondary = {p2SecondaryName}");
+            
 
             // Load the game scene
             SceneManager.LoadScene("GameScene");

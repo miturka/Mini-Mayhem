@@ -5,8 +5,8 @@ public class DuelBreaker : BaseAbility
 {
     public float chargeSpeed = 15f;          // Speed of the charge
     public float chargeRange = 8f;          // Maximum distance for the charge
-    public float damage = 20f;              // Base damage of the ability
-    public float bonusDamage = 10f;         // Additional damage for hitting during an opponent's ability
+    public float damage = 15f;              // Base damage of the ability
+    public float bonusDamage = 5f;         // Additional damage for hitting during an opponent's ability
 
     public Transform opponent;              // Direct reference to the opponent
 

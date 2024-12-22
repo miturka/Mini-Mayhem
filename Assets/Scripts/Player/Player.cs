@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using Microsoft.Unity.VisualStudio.Editor;
-using UnityEngine.UIElements;
 using System.Collections;
 using TMPro;
 
@@ -15,6 +13,7 @@ public class Player : MonoBehaviour
     [Header("Abilities")]
     [SerializeField] public BaseAbility primaryAbility;   // Selectable in Inspector
     [SerializeField] public BaseAbility secondaryAbility;
+    [SerializeField] public BaseAbility tertiaryAbility;
 
     public Renderer rendererbody;
     public Renderer rendererlegl;
@@ -23,19 +22,43 @@ public class Player : MonoBehaviour
 
     public Material blueCatMaterial;
 
+    public bool isAttacking = false;
 
 
-    public void UsePrimaryAbility() => primaryAbility?.Activate();
-    public void UseSecondaryAbility() => secondaryAbility?.Activate();
+
+    public void UsePrimaryAbility()
+    {
+        if (!isAttacking)
+        {
+            primaryAbility?.Activate();
+        }
+    }
+
+    public void UseSecondaryAbility()
+    {
+        if (!isAttacking)
+        {
+            secondaryAbility?.Activate();
+        }
+    }
+
+    public void UseTertiaryAbility()
+    {
+        if (!isAttacking)
+        {
+            tertiaryAbility?.Activate();
+        }
+    }
     public void TakeDamage(int amount) => health?.TakeDamage(amount);
     public bool IsAlive() => (bool)(health?.IsAlive());
     public void setPrimaryAbility(BaseAbility ability) => primaryAbility = ability;
     public void setSecondaryAbility(BaseAbility ability) => secondaryAbility = ability;
+    public void setTertiaryAbility(BaseAbility ability) => secondaryAbility = ability;
 
     public bool isHitBySpinAttack = false;
 
     
-    public void Initialize(UnityEngine.UI.Image healthBar, TextMeshProUGUI healthNum, UnityEngine.UI.Image primaryCooldownBar, UnityEngine.UI.Image secondaryCooldownBar, int maxHealth=100, float moveSpeed=5.0f, float jumpHeight=2.0f){
+    public void Initialize(UnityEngine.UI.Image healthBar, TextMeshProUGUI healthNum, UnityEngine.UI.Image primaryCooldownBar, UnityEngine.UI.Image secondaryCooldownBar, UnityEngine.UI.Image tertiaryCooldownBar, int maxHealth=100, float moveSpeed=5.0f, float jumpHeight=2.0f){
         movement = GetComponent<PlayerMovement>();
         health = GetComponent<HealthManager>();
         cooldown = GetComponent<AbilityController>();
@@ -63,6 +86,7 @@ public class Player : MonoBehaviour
         {
             cooldown.primaryCooldownBar = primaryCooldownBar;
             cooldown.secondaryCooldownBar = secondaryCooldownBar;
+            cooldown.tertiaryCooldownBar = tertiaryCooldownBar;
         }
         else{
             Debug.Log("cooldown neni");
@@ -73,7 +97,7 @@ public class Player : MonoBehaviour
         Debug.Log("Character initialized.");
     }
 
-    public void AddAbility(string abilityName, bool isPrimary)
+    public void AddAbility(string abilityName, int num)
     {
         Type abilityType = Type.GetType(abilityName); // Nájde typ podľa názvu
 
@@ -92,13 +116,16 @@ public class Player : MonoBehaviour
         // Dynamické pridanie komponentu
         BaseAbility ability = (BaseAbility)gameObject.AddComponent(abilityType);
 
-        if (isPrimary)
+        if (num == 0)
         {
             primaryAbility = ability;
         }
-        else
+        else if (num ==1)
         {
             secondaryAbility = ability;
+        }
+        else{
+            tertiaryAbility = ability;
         }
     }
 

@@ -18,12 +18,43 @@ public class Shockwave : BaseAbility
     public float hitYMaxHeight = 2.2f;
 
     protected override void Awake(){
+        base.Awake();
         knockbackForce = 3f;
         speedMultiplier = 3f;
+        
     }
 
+    private void Start(){
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        AudioClip abilitySound = Resources.Load<AudioClip>("Sounds/shockwave");
+
+        if (abilitySound != null)
+        {
+            audioSource.clip = abilitySound; // Priradenie zvuku
+        }
+        else
+        {
+            Debug.LogError("Ability sound not found at Resources/Sounds/sound!");
+        }
+    }
+
+    public override void Activate()
+    {
+        if (transform.position.y > 1.48){
+            return;
+        }
+        if (IsOnCooldown())
+        {
+            Debug.Log($"{GetType().Name} is on cooldown.");
+            return;
+        }
+        lastActivationTime = Time.time; // Set the last activation time
+        Execute(); // Call the custom logic of the derived ability
+    }
     protected override void Execute()
     {
+        player.isAttacking = true;
         circlePrefab = Resources.Load<GameObject>("Prefabs/ExpandingCircle");
 
         if (circlePrefab == null)
@@ -31,14 +62,15 @@ public class Shockwave : BaseAbility
             Debug.LogError("Circle Prefab is not assigned!");
             return;
         }
-
+        audioSource.Play();
         StartCoroutine(SpawnCirclesCoroutine()); // 3 kruhy, každých 1 sekundu
     }
-
+    
     private IEnumerator SpawnCirclesCoroutine()
     {
         for (int i = 0; i < numberOfCircles; i++)
         {
+            
             // Spawn the circle at the player's current position with a small Y offset
             Vector3 spawnPosition = transform.position + new Vector3(0, spawnOffsetY, 0);
             GameObject circle = Instantiate(circlePrefab, spawnPosition, Quaternion.identity);
@@ -54,6 +86,7 @@ public class Shockwave : BaseAbility
             // Čakaj pred vytvorením ďalšieho kruhu
             yield return new WaitForSeconds(delayBetweenCircles);
         }
+        player.isAttacking = false;
     }
 
     

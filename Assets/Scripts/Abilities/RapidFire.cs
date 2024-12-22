@@ -14,7 +14,7 @@ public class RapidFire : BaseAbility
 
     private bool isFiring = false;
 
-    private Animator animator; 
+    
 
     protected override void Awake()
     {
@@ -23,7 +23,7 @@ public class RapidFire : BaseAbility
         speedMultiplier = 3f;
         projectilePrefab = Resources.Load<GameObject>("Prefabs/Bullet");
 
-        animator = GetComponentInChildren<Animator>(); // Ak je Animator na dieťati
+         // Ak je Animator na dieťati
         if (animator == null)
         {
             Debug.LogError("Animator not found on this object or its children!");
@@ -44,12 +44,25 @@ public class RapidFire : BaseAbility
     }
 
     private void Start()
-{
-    if (firePoint == null)
     {
-        Debug.LogError("FirePoint is not set. Please assign it in the Inspector or initialize it in the script.");
+        if (firePoint == null)
+        {
+            Debug.LogError("FirePoint is not set. Please assign it in the Inspector or initialize it in the script.");
+        }
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.volume = 0.4f;
+        AudioClip abilitySound = Resources.Load<AudioClip>("Sounds/rapidfire");
+
+        if (abilitySound != null)
+        {
+            audioSource.clip = abilitySound; // Priradenie zvuku
+        }
+        else
+        {
+            Debug.LogError("Ability sound not found at Resources/Sounds/sound!");
+        }
     }
-}
 
     private IEnumerator RapidFireRoutine()
     {
@@ -66,6 +79,7 @@ public class RapidFire : BaseAbility
         while (elapsedTime < abilityDuration)
         {
             elapsedTime += fireRate;
+            audioSource.Play();
 
             // Stredný projektil (hlavný smer)
             CreateProjectile(firePoint.position, firePoint.rotation);

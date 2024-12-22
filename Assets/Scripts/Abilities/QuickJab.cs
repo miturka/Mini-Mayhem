@@ -9,12 +9,12 @@ public class QuickJab :  BaseAbility
     public float attackDuration = 0.2f;
     public float spinDuration = 0.2f;
 
-    private Animator animator;
     private bool isAttacking = false;
     private HashSet<GameObject> hitTargets = new HashSet<GameObject>(); // Track objects hit during an attack
 
     protected override void Awake()
     {
+        base.Awake();
         cooldown = 0.5f;
         knockbackForce = 1.6f;
         speedMultiplier = 5.0f;
@@ -22,15 +22,28 @@ public class QuickJab :  BaseAbility
 
     private void Start()
     {
-        animator = transform.Find("CatModel").GetComponent<Animator>();
         if (hitbox != null)
         {
             hitbox.enabled = false;
+        }
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        AudioClip abilitySound = Resources.Load<AudioClip>("Sounds/basicattack2");
+
+        if (abilitySound != null)
+        {
+            audioSource.clip = abilitySound; // Priradenie zvuku
+        }
+        else
+        {
+            Debug.LogError("Ability sound not found at Resources/Sounds/x!");
         }
     }
 
     protected override void Execute()
     {
+        player.isAttacking = true;
         hitbox = transform.Find("PunchHitbox").GetComponent<CapsuleCollider>();
         Player playerScript = GetComponent<Player>();
         
@@ -71,6 +84,7 @@ public class QuickJab :  BaseAbility
         }
 
         isAttacking = false;
+        player.isAttacking = false;
     }
 
     /*private System.Collections.IEnumerator SpinAnimation()
@@ -94,6 +108,7 @@ public class QuickJab :  BaseAbility
     {
         if (isAttacking && other.CompareTag("Player") && other.gameObject != gameObject && !hitTargets.Contains(other.gameObject))
         {
+            audioSource.Play();
             Debug.Log("Hit another player: " + other.name);
 
             Player otherplayerScript = other.GetComponent<Player>();

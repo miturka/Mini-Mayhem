@@ -8,14 +8,15 @@ public class FireMissile : BaseAbility
     public Transform opponent; // Direct reference to the opponent
 
     public float projectileSpeed = 10f;
-    public int projectileDamage = 15;
+    public int projectileDamage = 10;
     public float projectileLifetime = 5f;
 
     private string missilePrefabPath = "Prefabs/Missile";
-    private Animator animator;
 
     protected override void Awake()
     {
+        base.Awake();
+        cooldown = 5f;
         knockbackForce = 3f;
         speedMultiplier = 3f;
     }
@@ -24,6 +25,20 @@ public class FireMissile : BaseAbility
     {
         opponent = GameLogic.Instance.GetOpponent(gameObject);
         animator = GetComponentInChildren<Animator>(); 
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        AudioClip abilitySound = Resources.Load<AudioClip>("Sounds/missile");
+
+        if (abilitySound != null)
+        {
+            audioSource.clip = abilitySound; // Priradenie zvuku
+        }
+        else
+        {
+            Debug.LogError("Ability sound not found at Resources/Sounds/sound!");
+        }
+
         if (opponent == null)
         {
             Debug.LogError("Opponent is not assigned.");
@@ -32,7 +47,7 @@ public class FireMissile : BaseAbility
 
     protected override void Execute()
     {
-
+        player.isAttacking = true;
         missilePrefab = Resources.Load<GameObject>(missilePrefabPath);
         if (missilePrefab == null)
         {
@@ -52,6 +67,7 @@ public class FireMissile : BaseAbility
             animator.SetTrigger("FireMissile");
         }
         // Instantiate and initialize the projectile
+        PlaySegment(0.5f, 0.42f);
         GameObject missileGO = Instantiate(missilePrefab, spawnPosition, Quaternion.LookRotation(directionToOpponent));
         Missile missile = missileGO.GetComponent<Missile>();
 
@@ -61,5 +77,8 @@ public class FireMissile : BaseAbility
         }
 
         Debug.Log("Projectile launched at opponent: " + opponent.name);
+        player.isAttacking = false;
     }
+
+    
 }

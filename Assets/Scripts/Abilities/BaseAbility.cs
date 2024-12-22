@@ -2,13 +2,18 @@ using UnityEngine;
 
 public abstract class BaseAbility : MonoBehaviour, IAbility
 {
-    public float cooldown = 5f; // Cooldown duration for the ability
+    public float cooldown = 3f; // Cooldown duration for the ability
     public float lastActivationTime = -Mathf.Infinity; // Last time the ability was activated
+
+    public Player player;
+
+    public AudioSource audioSource;
 
     [Header("Knockback Settings")]
     public float knockbackForce = 10f; // Force of the knockback
     public float speedMultiplier = 1.5f;
     public Vector3 knockbackDirectionOffset = new Vector3(0, 1, 0); // Default upward offset
+    protected Animator animator; 
 
     protected Transform firePoint;
 
@@ -21,10 +26,19 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
         {
             Debug.LogError($"FirePoint not found on {gameObject.name}. Make sure it exists as a child object.");
         }
+
+        player = GetComponent<Player>();
+
+        if (player == null)
+        {
+            Debug.LogError($"Player not found on {gameObject.name}. Make sure it exists as a componotenetnetnentetntn.");
+        }
+        animator = GetComponentInChildren<Animator>();
     }
 
-    public void Activate()
+    public virtual void Activate()
     {
+
         if (IsOnCooldown())
         {
             Debug.Log($"{GetType().Name} is on cooldown.");
@@ -78,6 +92,39 @@ public abstract class BaseAbility : MonoBehaviour, IAbility
     {
         PlayerMovement p = target.GetComponent<PlayerMovement>();
         p.ReceiveKnockback(knockbackOrigin, knockbackDirectionOffset, knockbackForce, speedMultiplier);
+    }
+
+    public void PlaySegment(float startTime, float duration)
+    {
+        if (audioSource.clip == null)
+        {
+            Debug.LogError("No audio clip assigned to the AudioSource.");
+            return;
+        }
+
+        if (startTime < 0 || startTime > audioSource.clip.length)
+        {
+            Debug.LogError("Invalid start time.");
+            return;
+        }
+
+        if (duration <= 0 || (startTime + duration) > audioSource.clip.length)
+        {
+            Debug.LogError("Invalid duration.");
+            return;
+        }
+
+        // Nastavenie začiatku prehrávania
+        audioSource.time = startTime;
+        audioSource.Play();
+
+        // Naplánovanie zastavenia zvuku po trvaní segmentu
+        Invoke(nameof(StopAudio), duration);
+    }
+
+    private void StopAudio()
+    {
+        audioSource.Stop();
     }
 
     /*internal void ApplyKnockbackV2(CharacterController target, Vector3 knockbackOrigin)

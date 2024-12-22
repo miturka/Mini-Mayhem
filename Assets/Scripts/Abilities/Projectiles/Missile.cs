@@ -7,6 +7,8 @@ public class Missile : MonoBehaviour
     public int damage; // Damage dealt by the projectile
     public float lifetime; // Time before the projectile self-destructs
 
+    private AudioSource audioSource;
+
     private Transform target; // Target to home in on
     private BaseAbility parentAbility;
 
@@ -64,11 +66,11 @@ public class Missile : MonoBehaviour
             }
         }
         }
-
+        parentAbility.PlaySegment(1.0f, 2.3f);
         // Destroy the projectile on impact
-        Destroy(gameObject);
+        Debug.Log("Missile hit: " + other.name + " A PREHRAVAM ZVKU");
 
-        // Optionally, trigger an explosion or visual effect here
-        Debug.Log("Missile hit: " + other.name);
+        
+        Destroy(gameObject);        
     }
 }

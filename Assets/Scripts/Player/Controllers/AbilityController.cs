@@ -7,11 +7,13 @@ public class AbilityController : MonoBehaviour
 
     public KeyCode primaryAbilityKey = KeyCode.Q;
     public KeyCode secondaryAbilityKey = KeyCode.E;
+    public KeyCode tertiaryAbilityKey = KeyCode.R;
 
 
     [Header("Cooldown UI")]
     public Image primaryCooldownBar;   // Assign in Inspector
     public Image secondaryCooldownBar; // Assign in Inspector
+    public Image tertiaryCooldownBar;
 
     void Start()
     {
@@ -28,6 +30,11 @@ public class AbilityController : MonoBehaviour
         if (Input.GetKeyDown(secondaryAbilityKey))
         {
             character.UseSecondaryAbility();
+        }
+
+        if (Input.GetKeyDown(tertiaryAbilityKey))
+        {
+            character.UseTertiaryAbility();
         }
 
         // Update the cooldown UI
@@ -47,6 +54,11 @@ public class AbilityController : MonoBehaviour
         {
             UpdateAbilityCooldown(character.secondaryAbility, secondaryCooldownBar);
         }
+
+        if (character.tertiaryAbility != null && tertiaryCooldownBar != null)
+        {
+            UpdateAbilityCooldown(character.tertiaryAbility, tertiaryCooldownBar);
+        }
     }
 
     private void UpdateAbilityCooldown(BaseAbility ability, Image cooldownBar)
@@ -59,12 +71,12 @@ public class AbilityController : MonoBehaviour
             float cooldownPercentage = Mathf.Clamp01(elapsedTime / ability.GetCooldown());
 
             // Update the UI bar (inverted because we are filling it)
-            cooldownBar.fillAmount = 0 + cooldownPercentage;
+            cooldownBar.fillAmount = 1 - cooldownPercentage;
         }
         else
         {
             // Ability is ready, so set the bar to full
-            cooldownBar.fillAmount = 1;
+            cooldownBar.fillAmount = 0;
         }
     }
 }
