@@ -3,23 +3,22 @@ using System.Collections;
 
 public class ChronoFlurry : BaseAbility
 {
-    public int numberOfHits = 5;
-    public float hitDamage = 3f;
-    public float finisherDamage = 12f;
-    public float timeBetweenHits = 0.2f;
-    public float attackRange = 2f;
+    public int numberOfHits = 5;              // Number of rapid hits in the flurry
+    public float hitDamage = 3f;             // Damage dealt by each rapid hit
+    public float finisherDamage = 12f;       // Damage dealt by the finishing attack
+    public float timeBetweenHits = 0.2f;     // Time delay between each rapid hit
+    public float attackRange = 2f;           // Maximum range within which the ability can hit the opponent
 
-    public Transform opponent;
-    public GameObject attackEffectPrefab;
-    public AudioClip flurrySound;
-    public AudioClip finisherSound;
+    public Transform opponent;               // Reference to the opponent's transform
+    public GameObject attackEffectPrefab;    // Prefab for visual effects during hits
+    public AudioClip flurrySound;            // Sound played during rapid hits
+    public AudioClip finisherSound;          // Sound played during the finisher attack
 
-    private AudioSource audioSource;
+    private AudioSource audioSource;         // Audio source component for playing sounds
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-
         opponent = GameLogic.Instance.GetOpponent(gameObject);
     }
 
@@ -31,6 +30,7 @@ public class ChronoFlurry : BaseAbility
             return;
         }
 
+        // Check if the opponent is within the attack range
         if (Vector3.Distance(transform.position, opponent.position) > attackRange)
         {
             Debug.Log("Opponent is out of range.");
@@ -42,8 +42,7 @@ public class ChronoFlurry : BaseAbility
 
     private IEnumerator PerformChronoFlurry()
     {
-        Debug.Log("Chrono Flurry activated!");
-
+        // Perform the series of rapid hits
         for (int i = 0; i < numberOfHits; i++)
         {
             if (!IsOpponentInRange()) break;
@@ -52,6 +51,7 @@ public class ChronoFlurry : BaseAbility
             yield return new WaitForSeconds(timeBetweenHits);
         }
 
+        // Perform the finisher if the opponent is still in range
         if (IsOpponentInRange())
         {
             PerformHit(finisherDamage, true);
@@ -59,6 +59,7 @@ public class ChronoFlurry : BaseAbility
         }
     }
 
+    // Performs a hit on the opponent, applying damage and optional knockback for the finisher
     private void PerformHit(float damage, bool isFinisher)
     {
         if (!IsOpponentInRange()) return;
@@ -68,8 +69,7 @@ public class ChronoFlurry : BaseAbility
         if (health != null)
         {
             health.TakeDamage((int)damage);
-            Debug.Log($"{(isFinisher ? "Finisher" : "Hit")} dealt {damage} damage to {opponent.name}.");
-        }
+         
 
         // Apply knockback on finisher
         if (isFinisher)
@@ -81,6 +81,7 @@ public class ChronoFlurry : BaseAbility
         PlayHitEffect();
     }
 
+    // Plays the visual effect for a hit
     private void PlayHitEffect()
     {
         if (attackEffectPrefab != null)
@@ -89,6 +90,7 @@ public class ChronoFlurry : BaseAbility
         }
     }
 
+    // Plays the specified audio clip
     private void PlaySound(AudioClip sound)
     {
         if (audioSource != null && sound != null)
@@ -97,11 +99,13 @@ public class ChronoFlurry : BaseAbility
         }
     }
 
+    // Checks if the opponent is within attack range
     private bool IsOpponentInRange()
     {
         return opponent != null && Vector3.Distance(transform.position, opponent.position) <= attackRange;
     }
 
+    // Draws a red wireframe sphere in the editor to visualize the attack range
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

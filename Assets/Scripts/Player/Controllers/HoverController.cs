@@ -4,6 +4,8 @@ using TMPro; // Required for TextMeshPro
 
 public class ToggleHoverTextChange : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    // Used for hovering over text in menu where selecting abilities
+    
     [SerializeField] private TextMeshProUGUI firstTextField;  // Reference to the first TextMeshProUGUI component
     [SerializeField] private TextMeshProUGUI secondTextField; // Reference to the second TextMeshProUGUI component
     [SerializeField] private string firstHoverText = "First Hovered Text";

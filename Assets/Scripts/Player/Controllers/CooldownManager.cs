@@ -5,6 +5,7 @@ public class CooldownManager : MonoBehaviour
 {
     private Dictionary<string, float> cooldowns = new Dictionary<string, float>();
 
+    // Starts the cooldown for a specific ability
     public void StartCooldown(string abilityName, float cooldownTime)
     {
         if (cooldowns.ContainsKey(abilityName))
@@ -17,6 +18,7 @@ public class CooldownManager : MonoBehaviour
         }
     }
 
+    // Checks if a specific ability is currently on cooldown
     public bool IsOnCooldown(string abilityName)
     {
         if (cooldowns.ContainsKey(abilityName))
@@ -26,6 +28,7 @@ public class CooldownManager : MonoBehaviour
         return false;
     }
 
+    // Gets the remaining cooldown time for a specific ability
     public float GetCooldownRemaining(string abilityName)
     {
         if (IsOnCooldown(abilityName))

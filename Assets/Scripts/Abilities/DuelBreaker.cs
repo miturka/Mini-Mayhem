@@ -18,7 +18,6 @@ public class DuelBreaker : BaseAbility
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-
         opponent = GameLogic.Instance.GetOpponent(gameObject);
     }
 
@@ -30,6 +29,7 @@ public class DuelBreaker : BaseAbility
             return;
         }
 
+        // Check if the opponent is within the charge range
         float distanceToOpponent = Vector3.Distance(transform.position, opponent.position);
         if (distanceToOpponent > chargeRange)
         {
@@ -49,7 +49,7 @@ public class DuelBreaker : BaseAbility
         RaycastHit hit;
 
         // Raycast toward the opponent to detect obstacles
-        if (Physics.Raycast(ray, out hit, 1.0f)) // Adjust distance (1.0f) as needed
+        if (Physics.Raycast(ray, out hit, 8.0f)) 
         {
             Debug.Log($"Hit object: {hit.collider.name}");
             return true;
@@ -60,12 +60,10 @@ public class DuelBreaker : BaseAbility
 
     private IEnumerator PerformDuelBreaker()
     {
-        Debug.Log("Duel Breaker activated!");
-
-        // Step 1: Play charge effect and sound
+        
         PlayChargeEffects();
 
-        // Step 2: Charge toward the opponent
+        // Charge toward the opponent
         Vector3 startPosition = transform.position;
         Vector3 targetPosition = opponent.position;
         float elapsedTime = 0f;
@@ -93,7 +91,7 @@ public class DuelBreaker : BaseAbility
             yield return null;
         }
 
-        // Step 3: Check for collision with opponent
+        // Check for collision with opponent
         if (Vector3.Distance(transform.position, opponent.position) <= 1.5f)
         {
             HandleCollisionWithOpponent();
@@ -104,6 +102,7 @@ public class DuelBreaker : BaseAbility
         }
     }
 
+    // Plays the charge's visual and sound effects
     private void PlayChargeEffects()
     {
         if (chargeEffectPrefab != null)
@@ -116,17 +115,10 @@ public class DuelBreaker : BaseAbility
         }
     }
 
+    // Handles the interaction with the opponent when the charge collides
     private void HandleCollisionWithOpponent()
     {
-        Debug.Log("Duel Breaker hit the opponent!");
-
-        // Apply knockback
-        Rigidbody opponentRb = opponent.GetComponent<Rigidbody>();
-        if (opponentRb != null)
-        {
-            Vector3 knockbackDirection = (opponent.position - transform.position).normalized;
-            opponentRb.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
-        }
+        
 
         // Apply damage
         HealthManager opponentHealth = opponent.GetComponent<HealthManager>();
@@ -139,13 +131,6 @@ public class DuelBreaker : BaseAbility
             }
 
             float totalDamage = damage;
-
-            // Apply bonus damage if the opponent is using an ability
-            if (opponent.TryGetComponent(out IAbility opponentAbility) && opponentAbility.IsOnCooldown())
-            {
-                totalDamage += bonusDamage;
-                Debug.Log("Opponent was using an ability! Bonus damage applied.");
-            }
 
             opponentHealth.TakeDamage((int)totalDamage);
             Debug.Log($"Opponent took {totalDamage} damage! Remaining health: {opponentHealth}");
