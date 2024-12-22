@@ -36,6 +36,8 @@ public class GameLogic : MonoBehaviour
     private float remainingTime;
     private bool isGameActive = false;
 
+    public FollowCamera followCamera;
+
     public TextMeshProUGUI timerText; // UI text for the timer
     public GameObject gameOverPanel; // UI panel for showing game over
     public TextMeshProUGUI gameOverText; // UI text for game over message
@@ -112,6 +114,9 @@ public class GameLogic : MonoBehaviour
         // Spawn hráčov
         player1 = Instantiate(playerPrefab, player1SpawnPosition, Quaternion.Euler(player1SpawnRotation));
         player2 = Instantiate(playerPrefab, player2SpawnPosition, Quaternion.Euler(player2SpawnRotation));
+
+        followCamera.player1 = player1.transform;
+        followCamera.player2 = player2.transform;
 
         // Nastavíme ich ako child objektov SceneContent
         player1.transform.SetParent(sceneContent.transform);
@@ -196,7 +201,22 @@ public class GameLogic : MonoBehaviour
 
             if (remainingTime <= 0)
             {
-                EndGame("Time's up! It's a draw.");
+                Player p1Script = player1.GetComponent<Player>();
+                Player p2Script = player2.GetComponent<Player>();
+                string winner = "";
+                if (p1Script.getHealth() > p2Script.getHealth())
+                {
+                    winner = "Player 1 wins!";
+                }
+                else if (p1Script.getHealth() < p2Script.getHealth())
+                {
+                    winner = "Player 2 wins!";
+                }
+                else
+                {
+                    winner = "It's a tie!";
+                }
+                EndGame(winner);
             }
 
             // Check for Escape key to toggle pause menu
@@ -221,7 +241,7 @@ public class GameLogic : MonoBehaviour
     public void ExitToMainMenu()
     {
         Time.timeScale = 1f; // Obnoviť čas (ak by bolo pauznuté)
-        SceneManager.LoadScene("MainMenu"); // Prepnúť na hlavnú menu scénu
+        SceneManager.LoadScene("MainMenuScene"); // Prepnúť na hlavnú menu scénu
     }
 
     public void PlayerDied(GameObject deadPlayer)
@@ -239,9 +259,6 @@ public class GameLogic : MonoBehaviour
         // Show game over UI
         gameOverPanel.SetActive(true);
         gameOverText.text = resultMessage;
-
-        // Optionally, reload the scene after a delay
-        //StartCoroutine(ReloadSceneAfterDelay(3f));
     }
 
     private void UpdateTimerUI()
@@ -290,7 +307,7 @@ public class GameLogic : MonoBehaviour
 
     public void ExitGame()
     {
-        SceneManager.LoadScene("MenuSelect");
+        SceneManager.LoadScene("MainMenuScene");
     }
 
     KeyCode GetKeyFromPrefs(string keyName, KeyCode defaultKey)

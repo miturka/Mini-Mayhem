@@ -7,7 +7,7 @@ public class CircleScript : MonoBehaviour
     public float maxRadius = 5f; // Maximum radius of the ring
     public int segments = 100; // Number of segments to draw the ring (smoothness)
     public float ringWidth = 0.2f; // Thickness of the rin
-    public float hitYMaxHeight = 1.0f;
+    public float hitYMaxHeight = 2.2f;
 
     public float hitCooldown = 0.5f; // Cooldown medzi zásahmi
     private bool canHit = true;
@@ -117,7 +117,7 @@ public class CircleScript : MonoBehaviour
                     CharacterController opponentController = other.GetComponent<CharacterController>();
                     if (opponentController != null)
                     {
-                        parentAbility.ApplyKnockbackV2(opponentController, transform.position);
+                        parentAbility.ApplyKnockback(opponentController, transform.position);
                     }
                 }
                 StartCoroutine(HitCooldown());

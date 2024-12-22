@@ -47,6 +47,10 @@ public class Missile : MonoBehaviour
             return; // Ignore collisions with the firing player
         }
 
+        if (other.CompareTag("ArenaArea")){
+            return;
+        }
+
         // Apply damage if the projectile hits the target
         HealthManager health = other.GetComponent<HealthManager>();
         if (health != null)
@@ -56,7 +60,7 @@ public class Missile : MonoBehaviour
             CharacterController opponentController = other.GetComponent<CharacterController>();
             if (opponentController != null)
             {
-                parentAbility.ApplyKnockbackV2(opponentController, transform.position);
+                parentAbility.ApplyKnockback(opponentController, transform.position);
             }
         }
         }

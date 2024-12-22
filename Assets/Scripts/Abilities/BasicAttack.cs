@@ -115,7 +115,7 @@ public class BasicAttack :  BaseAbility
                 CharacterController opponentController = other.GetComponent<CharacterController>();
                 if (opponentController != null)
                 {
-                    ApplyKnockbackV2(opponentController, transform.position);
+                    ApplyKnockback(opponentController, transform.position);
                 }
             }
             

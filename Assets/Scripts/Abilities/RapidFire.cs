@@ -21,7 +21,7 @@ public class RapidFire : BaseAbility
         base.Awake();
         knockbackForce = 3f;
         speedMultiplier = 3f;
-        projectilePrefab = Resources.Load<GameObject>("Prefabs/BasicMissile");
+        projectilePrefab = Resources.Load<GameObject>("Prefabs/Bullet");
 
         animator = GetComponentInChildren<Animator>(); // Ak je Animator na dieťati
         if (animator == null)

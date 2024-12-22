@@ -53,4 +53,8 @@ public class HealthManager : MonoBehaviour
 
         healthNum.text = Mathf.RoundToInt(currentHealth).ToString() ;
     }
+
+    public int getCurrentHealth(){
+        return currentHealth;
+    }
 }

@@ -32,8 +32,14 @@ public class PlayerMovement : MonoBehaviour
 
     public Animator animator;
 
+    private Coroutine currentKnockbackCoroutine;
+
+    public bool isBasicKBRunning;
+
     public bool isFrozen = false;
     public bool isRapidFiring = false;
+
+    public bool isArenaKnockbackActive = false;
 
     void Start()
     {
@@ -43,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+
         movement = Vector3.zero;
 
         if (isFrozen)
@@ -165,5 +172,116 @@ public class PlayerMovement : MonoBehaviour
         {
             controller.transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
         }
+    }
+
+    internal void ReceiveKnockback( Vector3 knockbackOrigin, Vector3 knockbackDirectionOffset, float knockbackForce, float speedMultiplier)
+    {
+        if (isArenaKnockbackActive)
+        {
+            Debug.Log("Arena knockback already active.");
+            return; // Nepovoľ ďalší arenový knockback
+        }
+        Vector3 knockbackDirection = (transform.position - knockbackOrigin).normalized + knockbackDirectionOffset;
+        if (currentKnockbackCoroutine != null)
+        {
+            StopCoroutine(currentKnockbackCoroutine); // Zastav aktuálny knockback
+        }
+        currentKnockbackCoroutine = StartCoroutine(ApplyKnockbackCoroutine(knockbackDirection, knockbackForce, speedMultiplier));
+    }
+
+    internal void ReceiveArenaKnockback(Vector3 knockbackDirectionOffset, float knockbackForce, float speedMultiplier)
+    {
+        Debug.Log("ARENOVYY");
+        Vector3 knockbackDirection = (Vector3.zero - transform.position).normalized + knockbackDirectionOffset;
+        isArenaKnockbackActive = true;
+        if (currentKnockbackCoroutine != null)
+        {
+            StopCoroutine(currentKnockbackCoroutine); // Zastav aktuálny knockback
+            Debug.Log("zastavujem knokbak z idk ani");
+
+        }
+        else{
+            Debug.Log("iny knok nebezi");
+        }
+        currentKnockbackCoroutine = StartCoroutine(ApplyArenaKnockbackCoroutine( knockbackDirection, knockbackForce, speedMultiplier));
+    }
+
+    private System.Collections.IEnumerator ApplyKnockbackCoroutine(Vector3 direction, float force, float speedMultiplier)
+    {
+        
+        FreezeMovement();
+        isBasicKBRunning = true; 
+        // Zvýšenie rýchlosti pomocou multiplier
+        Vector3 horizontalVelocity = new Vector3(direction.x, 0, direction.z).normalized * force * speedMultiplier;
+        float verticalVelocity = Mathf.Max(0, direction.y) * force * speedMultiplier;
+
+        float knockbackTimer = 0.2f; // Čas, kedy je hráč "nútene vo vzduchu"
+        bool forceAirborne = true;
+
+        while (forceAirborne || !controller.isGrounded)
+        {
+            if (knockbackTimer > 0)
+            {
+                knockbackTimer -= Time.deltaTime;
+            }
+            else
+            {
+                forceAirborne = false;
+            }
+
+            // Rýchlejšie pridávanie gravitácie (zrýchlený pohyb dole)
+            verticalVelocity += Physics.gravity.y * Time.deltaTime * speedMultiplier;
+
+            // Kombinácia zrýchlenej horizontálnej a vertikálnej zložky
+            Vector3 velocity = horizontalVelocity + Vector3.up * verticalVelocity;
+
+            // Rýchlejší pohyb
+            controller.Move(velocity * Time.deltaTime);
+
+            yield return null;
+        }
+
+        UnfreezeMovement();
+        currentKnockbackCoroutine = null;
+        isBasicKBRunning = false; 
+    }
+
+    private System.Collections.IEnumerator ApplyArenaKnockbackCoroutine(Vector3 direction, float force, float speedMultiplier)
+    {
+        FreezeMovement();
+
+        // Zvýšenie rýchlosti pomocou multiplier
+        Vector3 horizontalVelocity = new Vector3(direction.x, 0, direction.z).normalized * force * speedMultiplier;
+        float verticalVelocity = Mathf.Max(0, direction.y) * force * speedMultiplier;
+
+        float knockbackTimer = 0.2f; // Čas, kedy je hráč "nútene vo vzduchu"
+        bool forceAirborne = true;
+
+        while (forceAirborne || !controller.isGrounded)
+        {
+            if (knockbackTimer > 0)
+            {
+                knockbackTimer -= Time.deltaTime;
+            }
+            else
+            {
+                forceAirborne = false;
+            }
+
+            // Rýchlejšie pridávanie gravitácie (zrýchlený pohyb dole)
+            verticalVelocity += Physics.gravity.y * Time.deltaTime * speedMultiplier;
+
+            // Kombinácia zrýchlenej horizontálnej a vertikálnej zložky
+            Vector3 velocity = horizontalVelocity + Vector3.up * verticalVelocity;
+
+            // Rýchlejší pohyb
+            controller.Move(velocity * Time.deltaTime);
+
+            yield return null;
+        }
+
+        isArenaKnockbackActive = false; 
+        UnfreezeMovement();
+        currentKnockbackCoroutine = null;
     }
 }

@@ -22,9 +22,13 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((other.CompareTag("Player") && other.transform == transform) || other.CompareTag("Bullet")) 
+        if ((other.CompareTag("Player") && other.transform == parentAbility.transform) || other.CompareTag("Bullet")) 
         {
             return; // Ignore collisions with the firing player
+        }
+
+        if (other.CompareTag("ArenaArea")){
+            return;
         }
         // Apply damage if the projectile hits the target
         HealthManager health = other.GetComponent<HealthManager>();
@@ -35,7 +39,7 @@ public class Bullet : MonoBehaviour
             CharacterController opponentController = other.GetComponent<CharacterController>();
             if (opponentController != null)
             {
-                parentAbility.ApplyKnockbackV2(opponentController, transform.position);
+                parentAbility.ApplyKnockback(opponentController, transform.position);
             }
         }
         }
@@ -43,6 +47,6 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject);
 
         // Optionally, trigger an explosion or visual effect here
-        Debug.Log("Missile hit: " + other.name);
+        //Debug.Log("Missile hit: " + other.name);
     }
 }
